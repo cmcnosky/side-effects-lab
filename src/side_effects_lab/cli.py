@@ -3,7 +3,7 @@
 import typer
 
 IMPLEMENTATION_STATUS = (
-    "Side Effects Lab kernel foundation is installed. "
+    "Side Effects Lab clock, identifiers, and guarded state machine are installed. "
     "Executable lab runtime, services, scenarios, and demo are not implemented."
 )
 

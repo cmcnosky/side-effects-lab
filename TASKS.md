@@ -33,9 +33,11 @@ Status labels:
 - `BLOCKED`: a dependency or human gate is unmet.
 - `HOLD`: do not start without the named Work approval.
 
-T001 through T003 are complete and integrated through T003 integration SHA
-`393820062501f02c5df193c478d2540aaee918be`. T004 is `READY`; all later tasks
-remain dependency-blocked until their exact dependencies are integrated.
+T001 through T004 are complete and integrated through T004 integration SHA
+`32815e5991526171325ea329c2c54244b1be80c1`. T005, T006, and T007 are `READY`;
+T005 and T006 form the next parallel pair, while T007 waits for an integration
+slot under the two-unintegrated-branch limit. T008 and later remain
+dependency-blocked until their exact dependencies are integrated.
 
 ## Slice A — Contracts and kernel
 
@@ -109,7 +111,7 @@ wall-clock dependence in normalized output.
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T002–T003
-**Status:** READY
+**Status:** DONE
 
 Implement the normative states and transitions from
 `docs/ARCHITECTURE.md#canonical-operation-state-machine`.
@@ -128,6 +130,7 @@ Implement the normative states and transitions from
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T004
+**Status:** READY
 
 Generate dispatch, commit, loss, stale read, retry, expiry, and claim sequences.
 
@@ -145,6 +148,7 @@ Generate dispatch, commit, loss, stale read, retry, expiry, and claim sequences.
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T003–T004
+**Status:** READY
 
 Create transactional append-before-dispatch storage with explicit query order
 and run-local database paths.
@@ -163,6 +167,7 @@ and run-local database paths.
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T002–T004
+**Status:** READY
 
 Match immutable semantic intent, parameter constraints, expiry, cardinality, and
 optional compensation.
