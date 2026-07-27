@@ -33,8 +33,8 @@ Status labels:
 - `BLOCKED`: a dependency or human gate is unmet.
 - `HOLD`: do not start without the named Work approval.
 
-T001 and T002 are complete and integrated through Wave 1 contract-gate SHA
-`b386b87fa9ba72261648a58b6b6d86d26af02d04`. T003 is `READY`; all later tasks
+T001 through T003 are complete and integrated through T003 integration SHA
+`393820062501f02c5df193c478d2540aaee918be`. T004 is `READY`; all later tasks
 remain dependency-blocked until their exact dependencies are integrated.
 
 ## Slice A — Contracts and kernel
@@ -91,7 +91,7 @@ identifiers. Generate the initial JSON Schemas.
 **Wave:** 2 — Kernel
 **Estimate:** 0.25 day
 **Depends on:** T002
-**Status:** READY
+**Status:** DONE
 
 Implement integer ticks, scheduled event ordering, stable counters, and no
 wall-clock dependence in normalized output.
@@ -109,6 +109,7 @@ wall-clock dependence in normalized output.
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T002–T003
+**Status:** READY
 
 Implement the normative states and transitions from
 `docs/ARCHITECTURE.md#canonical-operation-state-machine`.

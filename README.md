@@ -51,11 +51,12 @@ inspect, import, depend on, or reuse Stinger code, data, artifacts, or results.
 
 ## Status
 
-**Planning and contract-foundation stage.** This repository contains the
-architecture and product plans, a locked Python package skeleton, strict
-version 0.1 base contracts, digest-pinned generated schemas, contract tests,
-and a planning-status CLI. It does not contain a runtime, simulator, validated
-scenario, evaluation result, release, or working integration.
+**Kernel-foundation stage.** This repository contains the architecture and
+product plans, a locked Python package, strict version 0.1 base contracts,
+digest-pinned generated schemas, a deterministic logical clock/scheduler and
+run-local identifiers, contract/kernel tests, and an implementation-status
+CLI. It does not contain an executable lab runtime, service simulator, validated
+scenario, evaluation result, release, or working subject integration.
 
 The only implemented command reports that status:
 

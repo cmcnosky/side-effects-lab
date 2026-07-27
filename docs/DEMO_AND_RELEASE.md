@@ -237,7 +237,8 @@ Do not ship model outputs as canonical evidence.
 | Stage | Supportable wording | Unsupported wording |
 | --- | --- | --- |
 | Planning | "The repository contains a plan and a catalog of 12 proposed scenarios." | "The lab works," "12 tests pass," or "benchmark." |
-| Contract foundation (current) | "Strict version 0.1 base contracts, digest-pinned generated schemas, and contract tests are implemented; the runtime and scenarios remain planned." | "The lab works," any scenario-validation claim, agent evaluation, or "benchmark." |
+| Contract foundation | "Strict version 0.1 base contracts, digest-pinned generated schemas, and contract tests are implemented; the runtime and scenarios remain planned." | "The lab works," any scenario-validation claim, agent evaluation, or "benchmark." |
+| Kernel foundation (current) | "The deterministic logical clock, scheduler, and run-local identifiers are implemented and tested; no service or scenario is implemented." | "The lab works," any scenario-validation claim, agent evaluation, or "benchmark." |
 | First slice | "One local commit-loss scenario is implemented and passes its documented validation gate." | "Agents are reliable" or "the architecture is proven." |
 | Portfolio-ready | "Twelve local deterministic scenarios are validated against curated unsafe and reconciliation-first reference subjects." | "Twelve agents tested," "production ready," or model ranking. |
 | Community-ready | "The tagged release meets documented cross-platform, replay, containment, and external-reproduction gates." | "Safe sandbox," "real integrations," or universal reliability. |

@@ -1,10 +1,10 @@
-"""Planning-status command-line interface."""
+"""Implementation-status command-line interface."""
 
 import typer
 
-BOOTSTRAP_STATUS = (
-    "Side Effects Lab bootstrap is installed. "
-    "Runtime, scenarios, and demo are not implemented."
+IMPLEMENTATION_STATUS = (
+    "Side Effects Lab kernel foundation is installed. "
+    "Executable lab runtime, services, scenarios, and demo are not implemented."
 )
 
 app = typer.Typer(
@@ -16,6 +16,6 @@ app = typer.Typer(
 
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context) -> None:
-    """Report the honest bootstrap status until runtime commands exist."""
+    """Report the honest implementation status until runtime commands exist."""
     if ctx.invoked_subcommand is None:
-        typer.echo(BOOTSTRAP_STATUS)
+        typer.echo(IMPLEMENTATION_STATUS)

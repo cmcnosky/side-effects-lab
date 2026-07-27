@@ -2,15 +2,14 @@
 
 ## Current phase
 
-**Wave 1 is complete at contract-gate SHA
-`b386b87fa9ba72261648a58b6b6d86d26af02d04`. T001 and T002 are integrated,
-the version 0.1 base contracts and schema digests are frozen, and T003 is ready.
-Runtime implementation has not started.**
+**Wave 2 is active. T003 is integrated at
+`393820062501f02c5df193c478d2540aaee918be`, and T004 is ready. The version 0.1
+base contracts remain frozen; no service simulator or scenario is implemented.**
 
 - Integration owner: Codex
 - Independent implementation and adversarial-review lane: Claude Code
 - Planning baseline before this plan: `3c21b55135e9d3b8061e6c423bd4ee2126461eb4`
-- Current implementation task: T003 from the Wave 1 contract-gate SHA
+- Current implementation task: T004 from the latest Wave 2 integration SHA
 - Completed synchronization point: T002 contract freeze
 - Next synchronization point: combined T003–T007 kernel gate
 - First human hold: T016 after the validated SEL-001 slice
