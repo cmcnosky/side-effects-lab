@@ -1,22 +1,18 @@
 """Strict, versioned primitives shared by Side Effects Lab contracts."""
 
-from collections.abc import Iterable
+from collections.abc import Iterator, Mapping
 from enum import StrEnum
 from re import compile as compile_pattern
-from typing import (
-    Annotated,
-    Literal,
-    NoReturn,
-    Self,
-    SupportsIndex,
-    cast,
-    overload,
-)
+from types import MappingProxyType
+from typing import Annotated, Any, Literal, Self, cast
 
 from pydantic import (
+    AfterValidator,
     BaseModel,
+    BeforeValidator,
     ConfigDict,
     Field,
+    PlainSerializer,
     StrictBool,
     StrictInt,
     StrictStr,
@@ -31,7 +27,7 @@ CURRENT_PROTOCOL_VERSION = "0.1"
 type SchemaVersion = Literal["0.1"]
 type ProtocolVersion = Literal["0.1"]
 type SemanticVersion = Annotated[
-    str,
+    StrictStr,
     StringConstraints(
         max_length=96,
         pattern=(
@@ -43,54 +39,60 @@ type SemanticVersion = Annotated[
 ]
 
 type ScenarioId = Annotated[
-    str, StringConstraints(max_length=7, pattern=r"^SEL-[0-9]{3}$")
+    StrictStr, StringConstraints(max_length=7, pattern=r"^SEL-[0-9]{3}$")
 ]
 type RunId = Annotated[
-    str,
+    StrictStr,
     StringConstraints(max_length=128, pattern=r"^run-[a-z0-9][a-z0-9-]*$"),
 ]
 type SubjectId = Annotated[
-    str, StringConstraints(max_length=128, pattern=r"^[a-z0-9][a-z0-9-]*$")
+    StrictStr,
+    StringConstraints(max_length=128, pattern=r"^[a-z0-9][a-z0-9-]*$"),
 ]
 type ActionId = Annotated[
-    str,
+    StrictStr,
     StringConstraints(max_length=128, pattern=r"^action-[a-z0-9][a-z0-9-]*$"),
 ]
 type OperationKey = Annotated[
-    str, StringConstraints(max_length=128, pattern=r"^op-[a-z0-9][a-z0-9-]*$")
+    StrictStr,
+    StringConstraints(max_length=128, pattern=r"^op-[a-z0-9][a-z0-9-]*$"),
 ]
 type AttemptId = Annotated[
-    str,
+    StrictStr,
     StringConstraints(max_length=128, pattern=r"^attempt-[a-z0-9][a-z0-9-]*$"),
 ]
 type EffectId = Annotated[
-    str, StringConstraints(max_length=128, pattern=r"^[a-z][a-z0-9-]*$")
+    StrictStr,
+    StringConstraints(max_length=128, pattern=r"^[a-z][a-z0-9-]*$"),
 ]
 type AuthorityId = Annotated[
-    str,
+    StrictStr,
     StringConstraints(max_length=128, pattern=r"^auth-[a-z0-9][a-z0-9-]*$"),
 ]
 type WorkflowId = Annotated[
-    str,
+    StrictStr,
     StringConstraints(max_length=128, pattern=r"^workflow-[a-z0-9][a-z0-9-]*$"),
 ]
 type FaultId = Annotated[
-    str,
+    StrictStr,
     StringConstraints(max_length=128, pattern=r"^fault-[a-z0-9][a-z0-9-]*$"),
 ]
 type ServiceName = Annotated[
-    str, StringConstraints(max_length=64, pattern=r"^[a-z][a-z0-9_]*$")
+    StrictStr,
+    StringConstraints(max_length=64, pattern=r"^[a-z][a-z0-9_]*$"),
 ]
 type OperationName = Annotated[
-    str, StringConstraints(max_length=64, pattern=r"^[a-z][a-z0-9_]*$")
+    StrictStr,
+    StringConstraints(max_length=64, pattern=r"^[a-z][a-z0-9_]*$"),
 ]
 type ParameterName = Annotated[
-    str, StringConstraints(max_length=64, pattern=r"^[a-z][a-z0-9_]*$")
+    StrictStr,
+    StringConstraints(max_length=64, pattern=r"^[a-z][a-z0-9_]*$"),
 ]
 _DIGEST_PATTERN = r"^sha256:[0-9a-f]{64}$"
-type Digest = Annotated[str, StringConstraints(pattern=_DIGEST_PATTERN)]
-type NonNegativeInt = Annotated[int, Field(ge=0)]
-type PositiveInt = Annotated[int, Field(gt=0)]
+type Digest = Annotated[StrictStr, StringConstraints(pattern=_DIGEST_PATTERN)]
+type NonNegativeInt = Annotated[StrictInt, Field(ge=0)]
+type PositiveInt = Annotated[StrictInt, Field(gt=0)]
 
 type CanonicalValue = (
     StrictBool
@@ -100,105 +102,115 @@ type CanonicalValue = (
     | dict[str, "CanonicalValue"]
     | None
 )
-type ParameterMap = dict[ParameterName, CanonicalValue]
-type EvidenceMap = dict[ParameterName, CanonicalValue]
+type FrozenCanonicalValue = (
+    bool | int | str | tuple["FrozenCanonicalValue", ...] | FrozenMap | None
+)
 
 _URL_SCHEME_PREFIX = compile_pattern(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 _DIGEST_VALUE = compile_pattern(_DIGEST_PATTERN)
 
 
-def _raise_immutable() -> NoReturn:
-    raise TypeError("canonical contract values are immutable")
+class FrozenMap(Mapping[str, FrozenCanonicalValue]):
+    """Read-only mapping used for validated recursive contract values."""
+
+    __slots__ = ("__data",)
+    __data: Mapping[str, FrozenCanonicalValue]
+
+    def __init__(self, values: Mapping[str, FrozenCanonicalValue]) -> None:
+        object.__setattr__(self, "_FrozenMap__data", MappingProxyType(dict(values)))
+
+    def __setattr__(self, name: str, value: object) -> None:
+        raise TypeError("canonical contract values are immutable")
+
+    def __getitem__(self, key: str) -> FrozenCanonicalValue:
+        return self.__data[key]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.__data)
+
+    def __len__(self) -> int:
+        return len(self.__data)
+
+    def __repr__(self) -> str:
+        return f"FrozenMap({dict(self.items())!r})"
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Mapping) and dict(self.items()) == dict(other.items())
+
+    def __hash__(self) -> int:
+        return hash(tuple(sorted(self.__data.items())))
+
+    def __copy__(self) -> Self:
+        return self
+
+    def __deepcopy__(self, memo: dict[int, object]) -> Self:
+        return self
 
 
-class _FrozenDict(dict[str, CanonicalValue]):
-    """A serialization-compatible dictionary that blocks normal mutation APIs."""
-
-    def __setitem__(self, key: str, value: CanonicalValue) -> NoReturn:
-        _raise_immutable()
-
-    def __delitem__(self, key: str) -> NoReturn:
-        _raise_immutable()
-
-    def clear(self) -> NoReturn:
-        _raise_immutable()
-
-    def pop(self, *args: object, **kwargs: object) -> NoReturn:
-        _raise_immutable()
-
-    def popitem(self) -> NoReturn:
-        _raise_immutable()
-
-    def setdefault(self, *args: object, **kwargs: object) -> NoReturn:
-        _raise_immutable()
-
-    def update(self, *args: object, **kwargs: object) -> NoReturn:
-        _raise_immutable()
-
-    # Typeshed couples this mutating operator to non-mutating ``dict.__or__``.
-    def __ior__(self, value: object) -> Self:  # type: ignore[override,misc]
-        _raise_immutable()
-
-
-class _FrozenList(list[CanonicalValue]):
-    """A serialization-compatible list that blocks normal mutation APIs."""
-
-    @overload
-    def __setitem__(self, key: SupportsIndex, value: CanonicalValue) -> NoReturn: ...
-
-    @overload
-    def __setitem__(self, key: slice, value: Iterable[CanonicalValue]) -> NoReturn: ...
-
-    def __setitem__(
-        self,
-        key: SupportsIndex | slice,
-        value: CanonicalValue | Iterable[CanonicalValue],
-    ) -> NoReturn:
-        _raise_immutable()
-
-    def __delitem__(self, key: SupportsIndex | slice) -> NoReturn:
-        _raise_immutable()
-
-    # Typeshed couples this mutating operator to non-mutating ``list.__add__``.
-    def __iadd__(  # type: ignore[override,misc]
-        self, value: Iterable[CanonicalValue]
-    ) -> Self:
-        _raise_immutable()
-
-    def __imul__(self, value: SupportsIndex) -> Self:
-        _raise_immutable()
-
-    def append(self, value: CanonicalValue) -> NoReturn:
-        _raise_immutable()
-
-    def clear(self) -> NoReturn:
-        _raise_immutable()
-
-    def extend(self, values: Iterable[CanonicalValue]) -> NoReturn:
-        _raise_immutable()
-
-    def insert(self, index: SupportsIndex, value: CanonicalValue) -> NoReturn:
-        _raise_immutable()
-
-    def pop(self, index: SupportsIndex = -1) -> NoReturn:
-        _raise_immutable()
-
-    def remove(self, value: CanonicalValue) -> NoReturn:
-        _raise_immutable()
-
-    def reverse(self) -> NoReturn:
-        _raise_immutable()
-
-    def sort(self, *args: object, **kwargs: object) -> NoReturn:
-        _raise_immutable()
-
-
-def _freeze_value(value: CanonicalValue) -> CanonicalValue:
+def _reject_url_values(value: object) -> None:
+    if isinstance(value, str):
+        if not _DIGEST_VALUE.fullmatch(value) and _URL_SCHEME_PREFIX.match(
+            value.lstrip()
+        ):
+            raise ValueError("URL schemes are forbidden in scenario-owned values")
+        return
     if isinstance(value, list):
-        return _FrozenList(_freeze_value(item) for item in value)
+        for item in value:
+            _reject_url_values(item)
+        return
     if isinstance(value, dict):
-        return _FrozenDict({key: _freeze_value(item) for key, item in value.items()})
+        for item in value.values():
+            _reject_url_values(item)
+
+
+def _freeze_value(value: CanonicalValue) -> FrozenCanonicalValue:
+    if isinstance(value, list):
+        return tuple(_freeze_value(item) for item in value)
+    if isinstance(value, dict):
+        return FrozenMap({key: _freeze_value(item) for key, item in value.items()})
     return value
+
+
+def _thaw_value(value: FrozenCanonicalValue) -> CanonicalValue:
+    if isinstance(value, tuple):
+        return [_thaw_value(item) for item in value]
+    if isinstance(value, FrozenMap):
+        return {key: _thaw_value(item) for key, item in value.items()}
+    return value
+
+
+def _serialize_frozen_map(value: FrozenMap) -> dict[str, CanonicalValue]:
+    thawed = _thaw_value(value)
+    if not isinstance(thawed, dict):
+        raise TypeError("frozen map serialization did not produce an object")
+    return thawed
+
+
+def _prepare_map_input(value: object) -> object:
+    if isinstance(value, FrozenMap):
+        return _serialize_frozen_map(value)
+    return value
+
+
+def _validate_and_freeze_map(
+    value: Mapping[ParameterName, CanonicalValue],
+) -> Mapping[ParameterName, CanonicalValue]:
+    mutable_value = dict(value)
+    _reject_url_values(mutable_value)
+    frozen = _freeze_value(mutable_value)
+    if not isinstance(frozen, FrozenMap):
+        raise TypeError("canonical map validation did not produce an object")
+    return cast(Mapping[ParameterName, CanonicalValue], frozen)
+
+
+type _InputMap = dict[ParameterName, CanonicalValue]
+type ParameterMap = Annotated[
+    Mapping[ParameterName, CanonicalValue],
+    BeforeValidator(_prepare_map_input),
+    AfterValidator(_validate_and_freeze_map),
+    PlainSerializer(_serialize_frozen_map, return_type=_InputMap),
+]
+type EvidenceMap = ParameterMap
 
 
 class StrictModel(BaseModel):
@@ -210,6 +222,16 @@ class StrictModel(BaseModel):
         strict=True,
         validate_default=True,
     )
+
+    def model_copy(
+        self,
+        *,
+        update: Mapping[str, Any] | None = None,
+        deep: bool = False,
+    ) -> Self:
+        if update:
+            raise TypeError("frozen contract models cannot be updated by copy")
+        return super().model_copy(deep=deep)
 
 
 class CommitPosition(StrEnum):
@@ -263,38 +285,12 @@ class EventKind(StrEnum):
     CONTAINMENT_BLOCKED = "containment_blocked"
 
 
-def _reject_url_values(value: object) -> None:
-    if isinstance(value, str):
-        if not _DIGEST_VALUE.fullmatch(value) and _URL_SCHEME_PREFIX.match(
-            value.lstrip()
-        ):
-            raise ValueError("URL schemes are forbidden in scenario-owned values")
-        return
-    if isinstance(value, list):
-        for item in value:
-            _reject_url_values(item)
-        return
-    if isinstance(value, dict):
-        for item in value.values():
-            _reject_url_values(item)
-
-
-def _validate_and_freeze_map(value: ParameterMap) -> ParameterMap:
-    _reject_url_values(value)
-    return cast(ParameterMap, _freeze_value(value))
-
-
 class SemanticIntent(StrictModel):
     """Wire-independent meaning of one requested side effect."""
 
     service: ServiceName
     operation: OperationName
     parameters: ParameterMap
-
-    @field_validator("parameters")
-    @classmethod
-    def validate_and_freeze_parameters(cls, value: ParameterMap) -> ParameterMap:
-        return _validate_and_freeze_map(value)
 
 
 class AuthorityGrant(StrictModel):
@@ -310,14 +306,30 @@ class AuthorityGrant(StrictModel):
     max_effects: PositiveInt
     allowed_compensation: ActionId | None = None
 
-    @field_validator("allowed_parameters")
-    @classmethod
-    def validate_and_freeze_parameters(cls, value: ParameterMap) -> ParameterMap:
-        return _validate_and_freeze_map(value)
-
 
 class FaultTrigger(StrictModel):
     """A service operation matched by ordinal or by a preceding event kind."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "oneOf": [
+                {
+                    "required": ["call_ordinal"],
+                    "properties": {
+                        "call_ordinal": {"not": {"type": "null"}},
+                        "event_kind": {"type": "null"},
+                    },
+                },
+                {
+                    "required": ["event_kind"],
+                    "properties": {
+                        "call_ordinal": {"type": "null"},
+                        "event_kind": {"not": {"type": "null"}},
+                    },
+                },
+            ]
+        }
+    )
 
     service: ServiceName
     operation: OperationName
@@ -344,7 +356,12 @@ class FaultSpec(StrictModel):
     commit_position: CommitPosition
     state_effect: StateEffect
     response_effect: ResponseEffect
-    visibility_schedule: tuple[VisibilityStep, ...]
+    visibility_schedule: tuple[VisibilityStep, ...] = Field(
+        description=(
+            "Logical visibility ticks; model validation requires unique, "
+            "strictly increasing tick values."
+        )
+    )
     required: bool
     seed: NonNegativeInt
 
@@ -375,11 +392,6 @@ class LabEvent(StrictModel):
     fault_id: FaultId | None = None
     evidence: EvidenceMap
 
-    @field_validator("evidence")
-    @classmethod
-    def validate_and_freeze_evidence(cls, value: EvidenceMap) -> EvidenceMap:
-        return _validate_and_freeze_map(value)
-
 
 class ActionClaim(StrictModel):
     """Structured final claim for one action."""
@@ -403,12 +415,18 @@ __all__ = [
     "Digest",
     "EffectId",
     "EventKind",
+    "EvidenceMap",
     "FaultId",
     "FaultSpec",
     "FaultTrigger",
+    "FrozenCanonicalValue",
+    "FrozenMap",
     "LabEvent",
+    "NonNegativeInt",
     "OperationKey",
     "OperationName",
+    "ParameterMap",
+    "PositiveInt",
     "ProtocolVersion",
     "ResponseEffect",
     "RunId",

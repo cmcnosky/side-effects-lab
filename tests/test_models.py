@@ -69,10 +69,17 @@ def test_semantic_parameters_are_deeply_immutable_and_digest_stable() -> None:
     items = cast(list[CanonicalValue], intent.parameters["items"])
     first = cast(dict[str, CanonicalValue], items[0])
 
-    with pytest.raises(TypeError, match="immutable"):
-        items.append("changed")
-    with pytest.raises(TypeError, match="immutable"):
-        first["name"] = "changed"
+    with pytest.raises(TypeError, match="doesn't apply"):
+        list.append(items, "changed")
+    with pytest.raises(TypeError, match="requires a 'dict'"):
+        dict.__setitem__(first, "name", "changed")
+    with pytest.raises(TypeError, match="doesn't apply"):
+        dict.update(
+            cast(dict[str, CanonicalValue], intent.parameters),
+            {"x": 1},
+        )
+    with pytest.raises(TypeError, match="cannot be updated by copy"):
+        intent.model_copy(update={"parameters": {"items": []}})
 
     cast(list[CanonicalValue], original["items"]).append("outside-change")
     assert canonical_digest(intent) == digest
@@ -103,8 +110,11 @@ def test_authority_grant_uses_the_semantic_intent_digest() -> None:
 
     assert grant.max_effects == 1
     assert grant.allowed_compensation is None
-    with pytest.raises(TypeError, match="immutable"):
-        grant.allowed_parameters["title"] = "changed"
+    with pytest.raises(TypeError, match="doesn't apply"):
+        dict.update(
+            cast(dict[str, CanonicalValue], grant.allowed_parameters),
+            {"title": "changed"},
+        )
 
 
 def test_fault_contract_round_trips_strict_json() -> None:
@@ -177,8 +187,11 @@ def test_event_and_claim_primitives_are_strict() -> None:
 
     assert event.seq == 1
     assert claim.effect_id is None
-    with pytest.raises(TypeError, match="immutable"):
-        event.evidence["unexpected"] = "value"
+    with pytest.raises(TypeError, match="doesn't apply"):
+        dict.update(
+            cast(dict[str, CanonicalValue], event.evidence),
+            {"unexpected": "value"},
+        )
 
 
 def test_event_evidence_rejects_url_schemes_but_allows_digests() -> None:

@@ -7,6 +7,7 @@ from side_effects_lab.canonical import (
     canonical_digest,
     canonical_json_bytes,
 )
+from side_effects_lab.models import SemanticIntent
 
 
 def test_canonical_json_is_compact_utf8_and_order_independent() -> None:
@@ -29,3 +30,13 @@ def test_digest_has_canonical_sha256_shape() -> None:
     assert canonical_digest({"a": 1}) == (
         "sha256:015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862"
     )
+
+
+def test_validated_immutable_values_remain_canonicalizable() -> None:
+    intent = SemanticIntent(
+        service="dummy_github",
+        operation="create_issue",
+        parameters={"items": [{"name": "docs"}]},
+    )
+
+    assert canonical_json_bytes(intent.parameters) == (b'{"items":[{"name":"docs"}]}')
