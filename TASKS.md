@@ -33,8 +33,9 @@ Status labels:
 - `BLOCKED`: a dependency or human gate is unmet.
 - `HOLD`: do not start without the named Work approval.
 
-T001 is complete and integrated. T002 is `READY`; all later tasks remain
-dependency-blocked until their exact dependencies are integrated.
+T001 and T002 are complete and integrated through Wave 1 contract-gate SHA
+`b386b87fa9ba72261648a58b6b6d86d26af02d04`. T003 is `READY`; all later tasks
+remain dependency-blocked until their exact dependencies are integrated.
 
 ## Slice A — Contracts and kernel
 
@@ -69,8 +70,7 @@ architecture traceability after T002A is integrated. Claude Code may draft the
 test matrix read-only while T002A is in progress.
 **Estimate:** 0.75 day
 **Depends on:** T001
-**Status:** IN_PROGRESS — corrected T002A is integrated; T002B is ready from
-the corrected integration SHA
+**Status:** DONE
 
 Implement version, identifier, semantic-intent, authority, fault, event, claim,
 and digest primitives. Reject unknown fields, floats, URLs, and invalid
@@ -91,6 +91,7 @@ identifiers. Generate the initial JSON Schemas.
 **Wave:** 2 — Kernel
 **Estimate:** 0.25 day
 **Depends on:** T002
+**Status:** READY
 
 Implement integer ticks, scheduled event ordering, stable counters, and no
 wall-clock dependence in normalized output.

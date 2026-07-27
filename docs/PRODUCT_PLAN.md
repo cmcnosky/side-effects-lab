@@ -228,8 +228,8 @@ In addition to portfolio readiness:
 - schema compatibility and deprecation policy are documented;
 - the owner has approved and added Apache-2.0 licensing;
 - contribution, security-reporting, and code-of-conduct documents exist;
-- at least two people other than the builder reproduce the demo from a clean
-  clone and report setup friction;
+- at least two people genuinely external to both regular project builders
+  reproduce the demo from a clean clone and report setup friction;
 - the primary-source adjacency scan is refreshed;
 - a release candidate receives an explicit owner publication approval.
 

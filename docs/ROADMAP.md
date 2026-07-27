@@ -62,7 +62,8 @@ land.
 **Deliverables**
 
 - `pyproject.toml`, locked dependencies, package skeleton, and CLI shell;
-- strict scenario, protocol, event, claim, oracle, and artifact models;
+- strict version, identifier, semantic-intent, authority, fault, event, and
+  claim models with digest-pinned generated schemas;
 - canonical JSON/digest helpers;
 - logical clock;
 - operation ledger and normative transition guards;

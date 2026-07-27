@@ -73,7 +73,7 @@ Use the standard library for SQLite, hashing, JSON, subprocesses, temporary
 directories, and the logical scheduler. Do not add an ORM, web framework,
 message queue, async framework, container SDK, or logging platform in the MVP.
 
-Support Python 3.12 and 3.13. The eventual `pyproject.toml` will use
+Support Python 3.12 and 3.13. The `pyproject.toml` declares
 `requires-python = ">=3.12,<3.14"` until Python 3.14 is explicitly tested.
 
 ## System context

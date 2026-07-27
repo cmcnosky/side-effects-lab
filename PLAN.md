@@ -2,15 +2,17 @@
 
 ## Current phase
 
-**Planning is accepted. Wave 1 is active; T001 and the corrected T002A are
-integrated, and T002B contract-test implementation is next from that frozen
-base. Runtime implementation has not started.**
+**Wave 1 is complete at contract-gate SHA
+`b386b87fa9ba72261648a58b6b6d86d26af02d04`. T001 and T002 are integrated,
+the version 0.1 base contracts and schema digests are frozen, and T003 is ready.
+Runtime implementation has not started.**
 
 - Integration owner: Codex
 - Independent implementation and adversarial-review lane: Claude Code
 - Planning baseline before this plan: `3c21b55135e9d3b8061e6c423bd4ee2126461eb4`
-- Current implementation task: T002B from the corrected T002A integration SHA
-- First synchronization point: T002 contract freeze
+- Current implementation task: T003 from the Wave 1 contract-gate SHA
+- Completed synchronization point: T002 contract freeze
+- Next synchronization point: combined T003–T007 kernel gate
 - First human hold: T016 after the validated SEL-001 slice
 
 This document controls active sequencing, ownership, synchronization, and
@@ -109,7 +111,7 @@ one writer per file at a time.
 
 | Wave | Codex lane | Claude Code lane | Synchronization gate |
 | --- | --- | --- | --- |
-| 1 — Contracts | T001 and T002A implementation | Draft the T002B negative-test matrix in parallel; implement it after T002A lands | Freeze scenario, protocol, event, authority, and artifact contracts. |
+| 1 — Contracts | T001 and T002A implementation | Draft the T002B negative-test matrix in parallel; implement it after T002A lands | Freeze versioned base contracts for identity, intent, authority, faults, events, claims, and canonical JSON. |
 | 2 — Kernel | T003 → T004 → T006 | After T004 lands: T005 and T007 | State-machine, authority, property, and ledger checks pass together. |
 | 3 — Execution core | T008 → T009 | T012 → T013 | Freeze gateway, event, oracle, and artifact interfaces. |
 | 4 — Vertical components | T010, then T014 after T011 merges | T011, then SEL-001 fixtures and unsafe mutations | Merge all T008–T014 dependencies. |
@@ -193,16 +195,19 @@ specific evidence. Any new head SHA invalidates the prior approval and requires
 at least a delta review. A handoff with a dirty worktree, an unlisted contract
 change, or a failing required check is not merge-ready.
 
-## Immediate launch order
+## Wave 1 completion record and next launch
 
-1. Codex starts T002A from the integrated T001 SHA while Claude Code prepares
-   the T002B negative-test matrix without editing shared files.
-2. Codex integrates T002A.
-3. Claude Code creates T002B from that integrated dependency SHA and turns its
-   prepared matrix into negative fixtures and contract tests in permitted test
-   paths.
-4. Codex integrates T002A/T002B, runs the contract gate, records the frozen
-   schema digests, and then opens Wave 2.
+1. T001 bootstrap was implemented, independently reviewed, and integrated.
+2. T002A contracts were implemented, corrected after adversarial review,
+   independently re-reviewed, and integrated.
+3. Claude Code implemented T002B negative fixtures and contract tests from the
+   corrected T002A integration SHA; Codex and an independent review both
+   approved the corrective head.
+4. Codex integrated T002B, recorded the generated schema digests in
+   `schemas/0.1/SHA256SUMS`, and passed the contract gate with an exact-SHA
+   Claude Code review.
+5. Codex starts T003 from the stable Wave 1 gate. Claude Code reviews T003;
+   T004 remains serial until that review is integrated.
 
 The exact first-slice acceptance gate is the six-part Milestone 2 gate in
 [ROADMAP.md](docs/ROADMAP.md#milestone-2--first-vertical-slice).

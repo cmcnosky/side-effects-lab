@@ -198,11 +198,13 @@ ambient host paths.
 
 ### Versioning
 
-- Package and artifact schema use semantic versions independently.
-- Scenarios have stable IDs and their own semantic versions.
+- Package releases and scenarios use semantic versions independently.
+- Artifact and protocol schemas use a separate two-part `MAJOR.MINOR` version;
+  the frozen initial value is exactly `0.1`, not a semantic version.
 - Any change to initial state, fault timing, authority, oracle, or allowed
   terminal status bumps the scenario version.
-- Breaking artifact changes bump its major schema version.
+- A breaking artifact change must not reuse `0.1`; the compatibility and
+  deprecation policy is finalized before community readiness.
 - Release notes list scenario additions, semantic changes, and fixed false
   positives/negatives.
 
@@ -234,7 +236,8 @@ Do not ship model outputs as canonical evidence.
 
 | Stage | Supportable wording | Unsupported wording |
 | --- | --- | --- |
-| Planning (current) | "The repository contains a plan and a catalog of 12 proposed scenarios." | "The lab works," "12 tests pass," or "benchmark." |
+| Planning | "The repository contains a plan and a catalog of 12 proposed scenarios." | "The lab works," "12 tests pass," or "benchmark." |
+| Contract foundation (current) | "Strict version 0.1 base contracts, digest-pinned generated schemas, and contract tests are implemented; the runtime and scenarios remain planned." | "The lab works," any scenario-validation claim, agent evaluation, or "benchmark." |
 | First slice | "One local commit-loss scenario is implemented and passes its documented validation gate." | "Agents are reliable" or "the architecture is proven." |
 | Portfolio-ready | "Twelve local deterministic scenarios are validated against curated unsafe and reconciliation-first reference subjects." | "Twelve agents tested," "production ready," or model ranking. |
 | Community-ready | "The tagged release meets documented cross-platform, replay, containment, and external-reproduction gates." | "Safe sandbox," "real integrations," or universal reliability. |
