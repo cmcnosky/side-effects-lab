@@ -51,9 +51,16 @@ inspect, import, depend on, or reuse Stinger code, data, artifacts, or results.
 
 ## Status
 
-**Planning only.** This repository currently contains architecture and product
-documents. It does not contain a runtime, CLI, simulator, validated scenario,
-test result, release, or working integration.
+**Bootstrap only.** This repository contains architecture and product documents,
+a locked Python package skeleton, and a planning-status CLI. It does not contain
+a runtime, simulator, validated scenario, evaluation result, release, or working
+integration.
+
+The only implemented command reports that status:
+
+```console
+uv run --locked sel
+```
 
 The target future command shown in the plan is:
 
@@ -61,7 +68,7 @@ The target future command shown in the plan is:
 uv run --locked sel demo
 ```
 
-That command does not exist yet.
+The `demo` command does not exist yet.
 
 ## Honest non-claims
 

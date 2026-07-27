@@ -26,10 +26,13 @@ targeted checks independently.
 Status labels:
 
 - `READY`: dependencies are met.
+- `IN_REVIEW`: implementation is complete but peer approval or integration is
+  still pending.
+- `DONE`: the task passed its Definition of Done and was integrated.
 - `BLOCKED`: a dependency or human gate is unmet.
 - `HOLD`: do not start without the named Work approval.
 
-At accepted planning handoff, T001 is `READY`; all later tasks remain
+T001 is complete and integrated. T002 is `READY`; all later tasks remain
 dependency-blocked until their exact dependencies are integrated.
 
 ## Slice A — Contracts and kernel
@@ -40,7 +43,7 @@ dependency-blocked until their exact dependencies are integrated.
 **Reviewer:** Claude Code
 **Wave:** 1 — Contracts
 **Estimate:** 0.5 day
-**Status:** READY
+**Status:** DONE
 
 Create `pyproject.toml`, `uv.lock`, `src/side_effects_lab/`, `tests/`, Ruff and
 mypy configuration, the `sel` CLI entry point with a planning-status message,
@@ -65,6 +68,7 @@ architecture traceability after T002A is integrated. Claude Code may draft the
 test matrix read-only while T002A is in progress.
 **Estimate:** 0.75 day
 **Depends on:** T001
+**Status:** READY
 
 Implement version, identifier, semantic-intent, authority, fault, event, claim,
 and digest primitives. Reject unknown fields, floats, URLs, and invalid

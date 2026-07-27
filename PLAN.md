@@ -2,13 +2,13 @@
 
 ## Current phase
 
-**Planning is accepted. Wave 1 is ready; runtime implementation has not
-started.**
+**Planning is accepted. Wave 1 is active; T001 is complete and runtime
+implementation has not started.**
 
 - Integration owner: Codex
 - Independent implementation and adversarial-review lane: Claude Code
 - Planning baseline before this plan: `3c21b55135e9d3b8061e6c423bd4ee2126461eb4`
-- Next implementation task: T001 on the Codex task branch
+- Next implementation task: T002A; Claude Code may prepare the T002B test matrix
 - First synchronization point: T002 contract freeze
 - First human hold: T016 after the validated SEL-001 slice
 
@@ -194,14 +194,13 @@ change, or a failing required check is not merge-ready.
 
 ## Immediate launch order
 
-1. Codex starts T001 from this accepted planning SHA.
-2. Claude Code reviews the T002 contract-test matrix and architecture
-   traceability without editing shared files.
-3. Codex integrates T001 and then implements and integrates T002A.
-4. Claude Code creates T002B from that integrated dependency SHA and turns its
+1. Codex starts T002A from the integrated T001 SHA while Claude Code prepares
+   the T002B negative-test matrix without editing shared files.
+2. Codex integrates T002A.
+3. Claude Code creates T002B from that integrated dependency SHA and turns its
    prepared matrix into negative fixtures and contract tests in permitted test
    paths.
-5. Codex integrates T002A/T002B, runs the contract gate, records the frozen
+4. Codex integrates T002A/T002B, runs the contract gate, records the frozen
    schema digests, and then opens Wave 2.
 
 The exact first-slice acceptance gate is the six-part Milestone 2 gate in

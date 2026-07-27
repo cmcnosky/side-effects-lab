@@ -74,6 +74,9 @@ Safety rules win until the contradiction is resolved.
   branches with frozen interfaces and explicit permitted files.
 - Root `main` is stable and integration-only. Use the ignored worktrees and
   branch discipline defined in `PLAN.md`.
+- In a macOS lane, if Python reports that it skipped the editable install's
+  hidden `.pth` file, sync and run with `UV_NO_EDITABLE=1`. Do not mask a real
+  package-install failure with `PYTHONPATH`.
 - Do not edit the same shared file concurrently. Stop on a canonical-file
   conflict and reconcile it explicitly.
 - Start every task from the latest integrated dependency SHA. Keep at most two

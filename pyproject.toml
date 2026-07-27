@@ -1,0 +1,41 @@
+[project]
+name = "side-effects-lab"
+version = "0.0.0"
+description = "A deterministic local fault-injection lab for tool-using AI agents"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "pydantic>=2,<3",
+    "typer>=0.12,<1",
+]
+
+[project.scripts]
+sel = "side_effects_lab.cli:app"
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6,<7",
+    "mypy>=1,<2",
+    "pytest>=8,<10",
+    "ruff>=0.8,<1",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-config", "--strict-markers"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "RUF", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
