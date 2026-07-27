@@ -2,13 +2,14 @@
 
 ## Current phase
 
-**Planning is accepted. Wave 1 is active; T001 is complete and runtime
-implementation has not started.**
+**Planning is accepted. Wave 1 is active; T001 is complete and T002A contract
+implementation is awaiting exact-SHA peer review. Runtime implementation has
+not started.**
 
 - Integration owner: Codex
 - Independent implementation and adversarial-review lane: Claude Code
 - Planning baseline before this plan: `3c21b55135e9d3b8061e6c423bd4ee2126461eb4`
-- Next implementation task: T002A; Claude Code may prepare the T002B test matrix
+- Current review task: T002A; Claude Code prepared the T002B test matrix
 - First synchronization point: T002 contract freeze
 - First human hold: T016 after the validated SEL-001 slice
 

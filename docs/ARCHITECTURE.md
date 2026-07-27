@@ -241,6 +241,40 @@ Every scenario supplies the intended `operation_key` in structured task context.
 A write tool requires it. Mutating or replacing it after ambiguity is visible to
 the oracle.
 
+### Frozen base-contract conventions (`schema_version` 0.1)
+
+T002 freezes the smallest shared contract surface needed by later layers:
+
+- artifact and protocol schema versions are the exact two-part value `0.1`;
+  scenario and subject versions are semantic three-part versions;
+- identifiers are ASCII tokens of at most 128 characters with the documented
+  prefixes: `run-`, `action-`, `op-`, `attempt-`, `auth-`, `workflow-`, and
+  `fault-`; service-specific effect IDs use the same lowercase token grammar;
+- SHA-256 digests are `sha256:` followed by exactly 64 lowercase hexadecimal
+  characters;
+- semantic intent is the strict object `service`, `operation`, and normalized
+  semantic `parameters`; these names are independent of vendor/wire schemas;
+- semantic parameters use JSON nulls, booleans, integers, strings, arrays, and
+  objects only. Floats are rejected. Recursive parameter and evidence
+  containers are defensively copied and deep-frozen after validation;
+- a string that begins, after leading whitespace, with generic URI-scheme
+  syntax is rejected in T002-owned parameters and event evidence. A valid
+  `sha256:` digest is the sole scheme-shaped exception;
+- fault triggers match a service/operation by exactly one of positive call
+  ordinal or preceding event kind; visibility steps have unique increasing
+  integer ticks;
+- the initial closed event-kind set covers action proposal, authority check,
+  preparation, dispatch/delivery, commit/rejection, each response outcome,
+  reads, schema observations, visibility and concurrent changes, fired faults,
+  state transitions, claims, and containment blocks;
+- checked-in schemas live under `schemas/0.1/` and are rendered from the model
+  registry as compact, key-sorted Draft 2020-12 JSON.
+
+The base event model validates one record but not cross-record sequence
+contiguity. T006 owns ledger ordering; T013 owns the full artifact envelope and
+sanitation. URL/path/environment containment outside T002-owned fields remains
+with the scenario loader and containment layers.
+
 ## Canonical operation state machine
 
 This state machine is normative.
