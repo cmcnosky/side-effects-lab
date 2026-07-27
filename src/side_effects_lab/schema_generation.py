@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from collections.abc import Mapping
+from hashlib import sha256
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -18,6 +19,7 @@ from side_effects_lab.models import (
 
 SCHEMA_ROOT = Path("schemas") / CURRENT_SCHEMA_VERSION
 SCHEMA_DIALECT = "https://json-schema.org/draft/2020-12/schema"
+SCHEMA_DIGEST_MANIFEST = "SHA256SUMS"
 
 SCHEMA_MODELS: Mapping[str, type[BaseModel]] = {
     "action-claim.schema.json": ActionClaim,
@@ -42,10 +44,20 @@ def expected_schemas() -> dict[str, bytes]:
     }
 
 
+def expected_schema_digest_manifest() -> bytes:
+    """Return a stable, standard SHA-256 manifest for the rendered schemas."""
+    lines = [
+        f"{sha256(content).hexdigest()}  {name}\n"
+        for name, content in expected_schemas().items()
+    ]
+    return "".join(lines).encode("ascii")
+
+
 def write_schemas(output_dir: Path = SCHEMA_ROOT) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     for name, content in expected_schemas().items():
         (output_dir / name).write_bytes(content)
+    (output_dir / SCHEMA_DIGEST_MANIFEST).write_bytes(expected_schema_digest_manifest())
 
 
 def schema_drift(output_dir: Path = SCHEMA_ROOT) -> list[str]:
@@ -60,6 +72,12 @@ def schema_drift(output_dir: Path = SCHEMA_ROOT) -> list[str]:
             problems.append(f"missing schema: {name}")
         elif path.read_bytes() != content:
             problems.append(f"changed schema: {name}")
+    manifest_path = output_dir / SCHEMA_DIGEST_MANIFEST
+    expected_manifest = expected_schema_digest_manifest()
+    if not manifest_path.exists():
+        problems.append(f"missing schema digest manifest: {SCHEMA_DIGEST_MANIFEST}")
+    elif manifest_path.read_bytes() != expected_manifest:
+        problems.append(f"changed schema digest manifest: {SCHEMA_DIGEST_MANIFEST}")
     return problems
 
 

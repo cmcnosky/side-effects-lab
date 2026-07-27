@@ -15,8 +15,10 @@ import sys
 from pathlib import Path
 
 from side_effects_lab.schema_generation import (
+    SCHEMA_DIGEST_MANIFEST,
     SCHEMA_MODELS,
     SCHEMA_ROOT,
+    expected_schema_digest_manifest,
     expected_schemas,
     schema_drift,
     write_schemas,
@@ -32,7 +34,10 @@ import hashlib
 import os
 from side_effects_lab.canonical import canonical_json_bytes, canonical_digest
 from side_effects_lab.models import SemanticIntent
-from side_effects_lab.schema_generation import expected_schemas
+from side_effects_lab.schema_generation import (
+    expected_schema_digest_manifest,
+    expected_schemas,
+)
 
 keys = [f"k{i}" for i in range(12)]
 forward = {k: {"i": idx, "s": k, "b": True, "n": None} for idx, k in enumerate(keys)}
@@ -59,6 +64,7 @@ blob = b"".join(schemas[name] for name in sorted(schemas))
 print("schema_all", hashlib.sha256(blob).hexdigest())
 for name in sorted(schemas):
     print("schema:" + name, hashlib.sha256(schemas[name]).hexdigest())
+print("schema_manifest", hashlib.sha256(expected_schema_digest_manifest()).hexdigest())
 """
 
 
@@ -132,6 +138,10 @@ def test_write_schemas_is_deterministic_without_touching_checked_in(
         assert (second / name).read_bytes() == content
         # Checked-in bytes match but are only read, never rewritten, here.
         assert (SCHEMA_ROOT / name).read_bytes() == content
+    expected_manifest = expected_schema_digest_manifest()
+    assert (first / SCHEMA_DIGEST_MANIFEST).read_bytes() == expected_manifest
+    assert (second / SCHEMA_DIGEST_MANIFEST).read_bytes() == expected_manifest
+    assert (SCHEMA_ROOT / SCHEMA_DIGEST_MANIFEST).read_bytes() == expected_manifest
     assert first.resolve() != SCHEMA_ROOT.resolve()
 
 

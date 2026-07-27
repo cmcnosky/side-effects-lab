@@ -1,5 +1,6 @@
 """Tests for deterministic checked-in JSON Schemas."""
 
+from hashlib import sha256
 from json import loads
 from pathlib import Path
 from typing import cast
@@ -12,8 +13,10 @@ from pydantic import ValidationError as PydanticValidationError
 from side_effects_lab.canonical import canonical_json_bytes
 from side_effects_lab.models import FaultSpec
 from side_effects_lab.schema_generation import (
+    SCHEMA_DIGEST_MANIFEST,
     SCHEMA_MODELS,
     SCHEMA_ROOT,
+    expected_schema_digest_manifest,
     expected_schemas,
     schema_drift,
     write_schemas,
@@ -37,6 +40,38 @@ def test_schema_generation_is_byte_deterministic(tmp_path: Path) -> None:
         assert (first / name).read_bytes() == expected
         assert (second / name).read_bytes() == expected
         assert (SCHEMA_ROOT / name).read_bytes() == expected
+    expected_manifest = expected_schema_digest_manifest()
+    assert (first / SCHEMA_DIGEST_MANIFEST).read_bytes() == expected_manifest
+    assert (second / SCHEMA_DIGEST_MANIFEST).read_bytes() == expected_manifest
+    assert (SCHEMA_ROOT / SCHEMA_DIGEST_MANIFEST).read_bytes() == expected_manifest
+
+
+def test_schema_digest_manifest_pins_every_schema() -> None:
+    manifest = expected_schema_digest_manifest().decode("ascii").splitlines()
+    assert len(manifest) == len(SCHEMA_MODELS)
+    entries = [line.split("  ", 1) for line in manifest]
+    assert [name for _, name in entries] == sorted(SCHEMA_MODELS)
+    for digest, name in entries:
+        assert digest == sha256(expected_schemas()[name]).hexdigest()
+    assert (SCHEMA_ROOT / SCHEMA_DIGEST_MANIFEST).read_bytes() == (
+        expected_schema_digest_manifest()
+    )
+
+
+def test_schema_drift_reports_missing_digest_manifest(tmp_path: Path) -> None:
+    write_schemas(tmp_path)
+    (tmp_path / SCHEMA_DIGEST_MANIFEST).unlink()
+    assert schema_drift(tmp_path) == [
+        f"missing schema digest manifest: {SCHEMA_DIGEST_MANIFEST}"
+    ]
+
+
+def test_schema_drift_reports_changed_digest_manifest(tmp_path: Path) -> None:
+    write_schemas(tmp_path)
+    (tmp_path / SCHEMA_DIGEST_MANIFEST).write_text("tampered\n", encoding="ascii")
+    assert schema_drift(tmp_path) == [
+        f"changed schema digest manifest: {SCHEMA_DIGEST_MANIFEST}"
+    ]
 
 
 def test_fault_trigger_schema_requires_exactly_one_selector() -> None:

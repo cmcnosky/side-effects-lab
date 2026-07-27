@@ -274,7 +274,9 @@ T002 freezes the smallest shared contract surface needed by later layers:
   reads, schema observations, visibility and concurrent changes, fired faults,
   state transitions, claims, and containment blocks;
 - checked-in schemas live under `schemas/0.1/` and are rendered from the model
-  registry as compact, key-sorted Draft 2020-12 JSON.
+  registry as compact, key-sorted Draft 2020-12 JSON; the generated
+  `schemas/0.1/SHA256SUMS` file records the contract-freeze digest of every
+  schema and is checked for drift with the schemas.
 
 The base event model validates one record but not cross-record sequence
 contiguity. T006 owns ledger ordering; T013 owns the full artifact envelope and
