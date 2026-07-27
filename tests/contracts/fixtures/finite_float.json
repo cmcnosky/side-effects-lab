@@ -1,0 +1,5 @@
+{
+  "service": "dummy_github",
+  "operation": "create_issue",
+  "parameters": {"weight": 1.5}
+}

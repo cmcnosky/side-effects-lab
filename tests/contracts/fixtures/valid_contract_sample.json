@@ -1,0 +1,41 @@
+{
+  "semantic_intent": {
+    "service": "dummy_github",
+    "operation": "create_issue",
+    "parameters": {"title": "Update docs", "labels": ["docs"]}
+  },
+  "authority_grant": {
+    "authority_id": "auth-create-issue",
+    "subject_id": "reconcile-first",
+    "service": "dummy_github",
+    "operation": "create_issue",
+    "semantic_intent_digest": "sha256:015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+    "allowed_parameters": {"title": "Update docs"},
+    "expires_at_tick": 12,
+    "max_effects": 1
+  },
+  "fault_spec": {
+    "fault_id": "fault-vanished-receipt",
+    "trigger": {"service": "dummy_github", "operation": "create_issue", "call_ordinal": 1},
+    "commit_position": "after_commit_before_response",
+    "state_effect": "commit",
+    "response_effect": "drop",
+    "visibility_schedule": [{"tick": 1, "visible_revision": 0}, {"tick": 3, "visible_revision": 1}],
+    "required": true,
+    "seed": 17
+  },
+  "event": {
+    "seq": 1,
+    "tick": 0,
+    "kind": "effect_committed",
+    "action_id": "action-create-issue",
+    "operation_key": "op-sel001",
+    "effect_id": "issue-1",
+    "evidence": {"revision": 1}
+  },
+  "action_claim": {
+    "action_id": "action-create-issue",
+    "status": "complete",
+    "effect_id": "issue-1"
+  }
+}

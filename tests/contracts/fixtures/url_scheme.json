@@ -1,0 +1,5 @@
+{
+  "service": "dummy_github",
+  "operation": "create_issue",
+  "parameters": {"callback": ["nested", {"target": "https://example.invalid/hook"}]}
+}

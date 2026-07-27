@@ -1,0 +1,10 @@
+{
+  "seq": 1,
+  "tick": 0,
+  "kind": "attempt_dispatched",
+  "action_id": "action-create-issue",
+  "attempt_id": "attempt-1",
+  "operation_key": "op-sel001",
+  "authority_id": "auth-create-issue",
+  "evidence": {"note": "dispatched", "digest": "sha256:015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862"}
+}

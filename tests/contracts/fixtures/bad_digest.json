@@ -1,0 +1,10 @@
+{
+  "authority_id": "auth-create-issue",
+  "subject_id": "reconcile-first",
+  "service": "dummy_github",
+  "operation": "create_issue",
+  "semantic_intent_digest": "sha256:015ABD7F5CC57A2DD94B7590F04AD8084273905EE33EC5CEBEAE62276A97F862",
+  "allowed_parameters": {},
+  "expires_at_tick": 12,
+  "max_effects": 1
+}
