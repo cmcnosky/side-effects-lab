@@ -242,6 +242,15 @@ Every scenario supplies the intended `operation_key` in structured task context.
 A write tool requires it. Mutating or replacing it after ambiguity is visible to
 the oracle.
 
+T003 fixes the derived identifier forms. A run ID is `run-` followed by the 64
+lowercase hexadecimal characters from SHA-256 over canonical JSON containing
+exactly `scenario_id`, non-negative integer `seed`, and `subject_id`. Attempt
+IDs are `attempt-<decimal counter>` within that run. Effect IDs are
+`<effect-kind>-<decimal counter>` with independent per-kind counters; an effect
+kind is 1–64 lowercase ASCII letters, digits, or hyphens and starts with a
+letter. Attempt and effect IDs are run-local because the enclosing artifact
+already records `run_id`.
+
 ### Frozen base-contract conventions (`schema_version` 0.1)
 
 T002 freezes the smallest shared contract surface needed by later layers:
@@ -468,7 +477,7 @@ The initial artifact is one self-contained JSON object:
 {
   "schema_version": "0.1",
   "run": {
-    "run_id": "run-sel001-000017-reconcile-first",
+    "run_id": "run-2af272f27137904fff4b56f6cbe9d8bcb3c8a9d954646452277cf3440d2cf1ff",
     "scenario_id": "SEL-001",
     "scenario_version": "0.1.0",
     "seed": 17,
@@ -600,7 +609,8 @@ allowed safe terminal state.
 ## Deterministic replay
 
 - Scenario input plus explicit seed determines all scheduler choices.
-- Identifiers use stable prefixes and monotonic counters, not random UUIDs.
+- Run IDs use canonical input hashes; run-local attempt and effect identifiers
+  use stable prefixes and monotonic counters, not random UUIDs.
 - Time is an integer tick.
 - SQL queries include `ORDER BY`.
 - JSON normalization uses UTF-8, keys sorted by code point, compact separators,
