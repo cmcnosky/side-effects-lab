@@ -112,6 +112,16 @@ def test_bad_authority_fixture_pins_float_cardinality(
     assert_error(exc_info, ("max_effects",), "int_type")
 
 
+def test_bad_digest_fixture_pins_uppercase_hex_rejection(
+    fixture_text: Callable[[str], str], assert_error: Callable[..., ErrorDetails]
+) -> None:
+    # bad_digest.json is a valid grant whose only defect is an all-uppercase-hex
+    # semantic_intent_digest; the model must reject it at that exact field.
+    with pytest.raises(ValidationError) as exc_info:
+        AuthorityGrant.model_validate_json(fixture_text("bad_digest.json"))
+    assert_error(exc_info, ("semantic_intent_digest",), "string_pattern_mismatch")
+
+
 def test_wrong_authority_id_prefix_is_rejected(
     assert_error: Callable[..., ErrorDetails],
 ) -> None:

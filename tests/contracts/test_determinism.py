@@ -4,7 +4,9 @@ Traceability: Architecture determinism rules and the T002B matrix "Determinism
 checks". Canonical bytes/digests and generated schema bytes must be identical
 across insertion order and across ``PYTHONHASHSEED=0`` and ``1``. Hash-seed
 independence can only be proven from a fresh interpreter, so each seed runs in a
-local, network-free subprocess. No test overwrites the checked-in schemas.
+local, network-free subprocess whose environment is a minimal explicit allowlist
+(only ``PYTHONHASHSEED``) rather than an inherited copy of the parent's. No test
+overwrites the checked-in schemas.
 """
 
 import os
@@ -20,8 +22,14 @@ from side_effects_lab.schema_generation import (
     write_schemas,
 )
 
+# A sentinel the parent process can set to prove it never reaches the child: the
+# subprocess environment is an explicit allowlist, not a copy of ``os.environ``.
+_SENTINEL_NAME = "SIDE_EFFECTS_LAB_PARENT_SENTINEL"
+_SENTINEL_VALUE = "leak-canary-6f3d9c2a"
+
 _PROBE = """
 import hashlib
+import os
 from side_effects_lab.canonical import canonical_json_bytes, canonical_digest
 from side_effects_lab.models import SemanticIntent
 from side_effects_lab.schema_generation import expected_schemas
@@ -39,6 +47,8 @@ intent_b = SemanticIntent(
     operation="create_issue",
     parameters={"a": [1, {"b": 3, "m": 2}], "z": 1},
 )
+present = "SIDE_EFFECTS_LAB_PARENT_SENTINEL" in os.environ
+print("sentinel", "present" if present else "absent")
 print("fwd", canonical_digest(forward))
 print("bwd", canonical_digest(backward))
 print("canon", canonical_json_bytes(forward).hex())
@@ -53,8 +63,9 @@ for name in sorted(schemas):
 
 
 def _run_under_seed(seed: str) -> dict[str, str]:
-    env = dict(os.environ)
-    env["PYTHONHASHSEED"] = seed
+    # Minimal explicit allowlist: the child inherits nothing from the parent
+    # except the hash seed under test.
+    env = {"PYTHONHASHSEED": seed}
     completed = subprocess.run(
         [sys.executable, "-c", _PROBE],
         env=env,
@@ -76,6 +87,18 @@ def test_canonical_and_schema_output_is_hash_seed_independent() -> None:
     seed1 = _run_under_seed("1")
     assert seed0, "probe produced no output"
     assert seed0 == seed1
+
+
+def test_parent_environment_does_not_leak_into_probe() -> None:
+    # Set a unique sentinel in this process, then prove the child never sees it:
+    # the subprocess environment is the explicit allowlist, not a copy of ours.
+    os.environ[_SENTINEL_NAME] = _SENTINEL_VALUE
+    try:
+        assert os.environ[_SENTINEL_NAME] == _SENTINEL_VALUE
+        result = _run_under_seed("0")
+    finally:
+        os.environ.pop(_SENTINEL_NAME, None)
+    assert result["sentinel"] == "absent"
 
 
 def test_insertion_order_is_irrelevant_in_a_fresh_interpreter() -> None:
