@@ -1,0 +1,10 @@
+{
+  "fault_id": "fault-no-selector",
+  "trigger": {"service": "dummy_github", "operation": "create_issue"},
+  "commit_position": "before_commit",
+  "state_effect": "commit",
+  "response_effect": "return",
+  "visibility_schedule": [],
+  "required": true,
+  "seed": 1
+}

@@ -1,0 +1,6 @@
+{
+  "service": "dummy_github",
+  "operation": "create_issue",
+  "parameters": {"title": "Update docs"},
+  "extra_field": true
+}
