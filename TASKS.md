@@ -69,8 +69,8 @@ architecture traceability after T002A is integrated. Claude Code may draft the
 test matrix read-only while T002A is in progress.
 **Estimate:** 0.75 day
 **Depends on:** T001
-**Status:** IN_PROGRESS — T002A is integrated; T002B is ready from the frozen
-integration SHA
+**Status:** IN_PROGRESS — corrected T002A is integrated; T002B is ready from
+the corrected integration SHA
 
 Implement version, identifier, semantic-intent, authority, fault, event, claim,
 and digest primitives. Reject unknown fields, floats, URLs, and invalid

@@ -65,6 +65,7 @@ Planned development dependencies:
 
 - `pytest`;
 - `hypothesis`;
+- `jsonschema` for executing generated Draft 2020-12 contracts in tests;
 - `ruff`;
 - `mypy`.
 
@@ -256,13 +257,18 @@ T002 freezes the smallest shared contract surface needed by later layers:
   semantic `parameters`; these names are independent of vendor/wire schemas;
 - semantic parameters use JSON nulls, booleans, integers, strings, arrays, and
   objects only. Floats are rejected. Recursive parameter and evidence
-  containers are defensively copied and deep-frozen after validation;
+  containers are defensively copied into read-only mappings and tuples after
+  validation; they never retain mutable `dict` or `list` subclasses, and copy
+  updates must create and validate a new contract rather than patch an existing
+  model;
 - a string that begins, after leading whitespace, with generic URI-scheme
   syntax is rejected in T002-owned parameters and event evidence. A valid
   `sha256:` digest is the sole scheme-shaped exception;
 - fault triggers match a service/operation by exactly one of positive call
   ordinal or preceding event kind; visibility steps have unique increasing
-  integer ticks;
+  integer ticks. The generated schema encodes the trigger XOR. Tick ordering is
+  a model-level semantic rule because JSON Schema cannot express monotonic item
+  order;
 - the initial closed event-kind set covers action proposal, authority check,
   preparation, dispatch/delivery, commit/rejection, each response outcome,
   reads, schema observations, visibility and concurrent changes, fired faults,

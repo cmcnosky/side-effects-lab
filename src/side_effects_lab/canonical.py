@@ -26,7 +26,7 @@ def _normalize(value: object, path: str = "$") -> CanonicalValue:
         return cast(CanonicalValue, value)
     if type(value) is float:
         raise CanonicalJsonError(f"floating-point value is forbidden at {path}")
-    if isinstance(value, list):
+    if isinstance(value, (list, tuple)):
         return [
             _normalize(item, f"{path}[{index}]") for index, item in enumerate(value)
         ]
