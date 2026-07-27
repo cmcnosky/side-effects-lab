@@ -2,19 +2,32 @@
 
 ## Estimation basis
 
-Estimates assume one strong AI-assisted builder working roughly six focused
-hours per weekday, with prompt review, tests, and documentation included. They
-are calendar estimates, not commitments. Community feedback and security review
-are inherently variable.
+Estimates assume two continuously available high-capacity AI-assisted builders:
+Codex as integration owner and Claude Code as the independent implementation
+and adversarial-review lane. A focused weekday is roughly six productive hours
+per builder and includes review, tests, documentation, and integration.
+
+These are elapsed critical-path estimates, not summed builder effort or
+commitments. Independent review can increase total effort. Human decisions,
+external reproductions, and community feedback remain inherently variable.
 
 The sequence is deliberately vertical: prove one commit-aware path before
-building the full catalog.
+building the full catalog. Parallel work starts only across interfaces frozen by
+the synchronization gates in the
+[two-builder master plan](../PLAN.md#parallel-execution-waves).
+
+Expected elapsed outcomes:
+
+- first validated slice: **5.5–6.5 focused weekdays**;
+- portfolio-ready: **20–23 focused weekdays**, normally **4–5 calendar weeks**;
+- community-ready: **5–7 calendar weeks**, subject to external reviewers and
+  human approvals.
 
 ## Milestone 0 — Planning bootstrap
 
-**Duration:** 1–2 days
+**Duration:** complete
 **Dependencies:** none
-**Status:** this document set, not yet accepted
+**Status:** accepted; two-builder execution plan active
 
 **Deliverables**
 
@@ -39,8 +52,12 @@ unattributed prior implementation.
 
 ## Milestone 1 — Contracts and kernel
 
-**Duration:** 3 focused days
+**Elapsed duration:** 2.5–3 focused weekdays
 **Dependencies:** Milestone 0 accepted
+**Parallel lanes:** Waves 1–2. Codex drives bootstrap, contract implementation,
+clock, state machine, and ledger. Claude Code owns contract negatives,
+traceability, property tests, and authority checks after their dependencies
+land.
 
 **Deliverables**
 
@@ -49,6 +66,7 @@ unattributed prior implementation.
 - canonical JSON/digest helpers;
 - logical clock;
 - operation ledger and normative transition guards;
+- authority engine and action-specific confirmation checks;
 - unit and Hypothesis state-machine tests.
 
 **Acceptance gate**
@@ -68,14 +86,18 @@ bypassed.
 
 ## Milestone 2 — First vertical slice
 
-**Duration:** 4 focused days
+**Elapsed duration:** 3–3.5 focused weekdays
 **Dependencies:** Milestone 1
+**Parallel lanes:** Waves 3–5. Codex drives scheduler, gateway, minimal GitHub,
+replay integration, and final acceptance. Claude Code owns the oracle/artifact
+lane, subject protocol, unsafe fixtures, and the independent replay and
+containment audit.
 
 **Deliverables**
 
 - event ledger persistence;
 - deterministic fault scheduler;
-- authority engine and gateway;
+- authority enforcement integrated through the gateway;
 - minimal `dummy_github`;
 - SEL-001 `Vanished Receipt`;
 - in-process `retry-blindly` and `reconcile-first` reference subjects;
@@ -96,9 +118,12 @@ All must pass:
 6. a containment test proves the slice uses no sockets, ambient credentials, or
    non-temporary writes.
 
+**Cumulative first-slice estimate:** 5.5–6.5 focused weekdays from the accepted
+planning SHA.
+
 ## Hold 1 — Novelty and usefulness
 
-**Duration:** 0.5–1 day
+**Elapsed duration:** 0.5 focused weekday when Work is available
 **Owner:** Work (human decision), with Codex evidence
 **Required before:** Milestone 3
 
@@ -123,8 +148,11 @@ an existing project instead.
 
 ## Milestone 3 — Core fault matrix
 
-**Duration:** 6–7 focused days
+**Elapsed duration:** 4–4.5 focused weekdays
 **Dependencies:** Hold 1 passed
+**Parallel lanes:** Waves 6–7. Codex owns conclusive-absence implementation,
+email, payments, and their assigned scenarios. Claude Code owns freshness
+adversarial tests, ticketing, and its assigned scenarios.
 
 **Deliverables**
 
@@ -146,8 +174,11 @@ an existing project instead.
 
 ## Hold 2 — Catalog quality
 
-**Duration:** 0.5 day
+**Elapsed duration:** 0.5 focused weekday
 **Required before:** Milestone 4
+**Parallel lanes:** Wave 8. Codex prepares the uniqueness matrix; Claude Code
+tries independently to demonstrate redundancy. Work decides any material scope
+change.
 
 Review the six validated scenarios for redundant invariants.
 
@@ -159,8 +190,11 @@ dummy service name. Keep the MVP below 12 if validation quality would decline.
 
 ## Milestone 4 — Complete the 12-scenario MVP
 
-**Duration:** 8 focused days
+**Elapsed duration:** 4.5–5 focused weekdays
 **Dependencies:** Hold 2 passed
+**Parallel lanes:** Waves 9–10. Service and scenario ownership is split by
+module; Codex performs the canonical full matrix while Claude Code audits
+mutation reasons and replay under alternate seeds and roots.
 
 **Deliverables**
 
@@ -184,7 +218,7 @@ dummy service name. Keep the MVP below 12 if validation quality would decline.
 
 ## Hold 3 — External subject adapter
 
-**Duration:** 1 day review
+**Elapsed duration:** 0.5 focused weekday review when Work is available
 **Owner:** Work (human decision), with Codex threat-model evidence
 **Required before:** Milestone 5
 
@@ -200,8 +234,12 @@ default demo needs an external process.
 
 ## Milestone 5 — Portfolio-ready demonstration
 
-**Duration:** 5 focused days
+**Elapsed duration:** 4.5–5.5 focused weekdays
 **Dependencies:** Milestone 4 and Hold 3 passed
+**Parallel lanes:** Waves 11–12. Codex owns adapter core, demo, adapter-specific
+containment, and clean-clone integration. Claude Code owns hostile protocol
+conformance, general containment, Linux CI, and the independent claims/link
+audit.
 
 **Deliverables**
 
@@ -226,13 +264,17 @@ default demo needs an external process.
 - README says exactly what is and is not implemented;
 - a fresh local clone reproduces the demo from the lockfile.
 
-**Portfolio-ready estimate:** 26–29 focused workdays from accepted planning,
-roughly 5–6 calendar weeks.
+**Portfolio-ready estimate:** 20–23 focused weekdays from accepted planning,
+roughly 4–5 calendar weeks when human holds are answered promptly.
 
 ## Milestone 6 — Community hardening
 
-**Duration:** 8–12 focused days plus reviewer availability
+**Elapsed duration:** 4–5 focused weekdays plus external reviewer availability
 **Dependencies:** portfolio-ready gate
+**Parallel lanes:** Waves 13–14. Codex owns schema policy, scenario template,
+macOS CI, release-candidate assembly, checksums, and canonical wording. Claude
+Code owns community/security documents and refreshed adjacency and claims
+audits. T045 remains external human work.
 
 **Deliverables**
 
@@ -253,8 +295,9 @@ roughly 5–6 calendar weeks.
 - release claims are tied to a tag candidate and exact CI run;
 - owner explicitly approves publication.
 
-**Community-ready estimate:** 7–9 calendar weeks total from accepted planning,
-assuming reviewers respond within one week.
+**Community-ready estimate:** 5–7 calendar weeks total from accepted planning.
+The lower bound assumes prompt Work decisions and external reviewers responding
+within one week; neither builder can compress those waits.
 
 ## Hold 4 — Publication
 

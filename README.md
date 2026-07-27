@@ -80,6 +80,7 @@ Side Effects Lab does not currently:
 
 ## Plan map
 
+- [Two-builder master execution plan](PLAN.md)
 - [Product plan](docs/PRODUCT_PLAN.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [MVP scenario catalog](docs/SCENARIO_CATALOG.md)
@@ -99,4 +100,4 @@ working slice must therefore demonstrate a useful distinction, not merely
 rename generic timeout testing.
 
 See the [competitive analysis](docs/PRODUCT_PLAN.md#adjacent-work-and-differentiation)
-and the [first hold point](docs/ROADMAP.md#hold-1-novelty-and-usefulness).
+and the [first hold point](docs/ROADMAP.md#hold-1--novelty-and-usefulness).

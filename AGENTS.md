@@ -55,6 +55,7 @@ require real side effects or data.
 
 Keep concepts defined once and link to them elsewhere:
 
+- Active phase, builder ownership, and integration handoffs: `PLAN.md`
 - Product scope and differentiation: `docs/PRODUCT_PLAN.md`
 - State machine, interfaces, and artifact contract:
   `docs/ARCHITECTURE.md`
@@ -66,6 +67,24 @@ Keep concepts defined once and link to them elsewhere:
 
 If documents disagree, stop and reconcile the contradiction in the same change.
 Safety rules win until the contradiction is resolved.
+
+## Two-builder coordination
+
+- Codex is the integration owner. Claude Code receives only bounded task
+  branches with frozen interfaces and explicit permitted files.
+- Root `main` is stable and integration-only. Use the ignored worktrees and
+  branch discipline defined in `PLAN.md`.
+- Do not edit the same shared file concurrently. Stop on a canonical-file
+  conflict and reconcile it explicitly.
+- Start every task from the latest integrated dependency SHA. Keep at most two
+  divergent unintegrated task branches open.
+- A peer review is valid only for the recorded head SHA. A changed SHA requires
+  at least a delta review.
+- The other builder must independently rerun targeted checks for changes to the
+  state machine, authority engine, scheduler, gateway, oracles, replay,
+  containment, or subprocess boundary.
+- Builder agreement does not satisfy a human hold or authorize paid services,
+  real integrations, publication, pushing, tagging, or releasing.
 
 ## Determinism rules
 
