@@ -3,14 +3,16 @@
 ## Current phase
 
 **Wave 2 is active. T005 and T006 are integrated through
-`71392c6e41ee66e5f70245da6b423aa1749e3e37`; T007 is the sole next
-implementation task from this authority-semantics freeze. The version 0.1 base
-contracts remain frozen; no service simulator or scenario is implemented.**
+`71392c65d980c12e2d80c12ff19205af211a7b20`; T007 is the sole next
+implementation task after exact-SHA approval of this authority-semantics
+freeze. The version 0.1 base contracts remain frozen; no service simulator or
+scenario is implemented.**
 
 - Integration owner: Codex
 - Independent implementation and adversarial-review lane: Claude Code
 - Planning baseline before this plan: `3c21b55135e9d3b8061e6c423bd4ee2126461eb4`
-- Next implementation task: T007 authority checks from this reviewed freeze
+- Next implementation task: T007 authority checks after exact-SHA approval of
+  this freeze
 - Completed synchronization point: T005/T006 integration gate at `71392c6`
 - Next synchronization point: combined T003–T007 kernel gate
 - First human hold: T016 after the validated SEL-001 slice

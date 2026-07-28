@@ -34,9 +34,9 @@ Status labels:
 - `HOLD`: do not start without the named Work approval.
 
 T001 through T006 are complete and integrated through T006 integration SHA
-`71392c6e41ee66e5f70245da6b423aa1749e3e37`. T007 is `READY` from the reviewed
-authority-semantics freeze. T008 and later remain dependency-blocked until
-their exact dependencies are integrated.
+`71392c65d980c12e2d80c12ff19205af211a7b20`. T007 is the next task and may
+start only from an exact-SHA-approved authority-semantics freeze. T008 and later
+remain dependency-blocked until their exact dependencies are integrated.
 
 ## Slice A — Contracts and kernel
 

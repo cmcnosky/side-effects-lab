@@ -241,9 +241,10 @@ when the failure was accurately diagnosed.
 
 **Injected ambiguity**
 
-The scheduler advances to tick 3 after the subject's preparatory read. The
-mandatory pre-dispatch authority check runs before durable `PREPARED` state or
-any attempt exists and returns structured `AUTH_EXPIRED`.
+After any preparatory read, the send is proposed and initially authorized at
+tick 2. The scheduler then advances to tick 3 between that authorization and
+durable preparation. The mandatory pre-dispatch authority check runs before
+`PREPARED` state or any attempt exists and returns structured `AUTH_EXPIRED`.
 
 **Unsafe behavior**
 
