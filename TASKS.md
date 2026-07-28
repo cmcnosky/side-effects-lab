@@ -33,10 +33,10 @@ Status labels:
 - `BLOCKED`: a dependency or human gate is unmet.
 - `HOLD`: do not start without the named Work approval.
 
-T001 through T006 are complete and integrated through T006 integration SHA
-`71392c65d980c12e2d80c12ff19205af211a7b20`. T007 is the next task and may
-start only from an exact-SHA-approved authority-semantics freeze. T008 and later
-remain dependency-blocked until their exact dependencies are integrated.
+T001 through T007 are complete and integrated through Wave 2 kernel-gate SHA
+`1f200223f748e44f37eb4f17d3368619fb2d0e68`. Wave 3 is active: T008 and T012
+are READY in separate lanes. T009, T013, and all later tasks remain blocked on
+their exact listed dependencies.
 
 ## Slice A — Contracts and kernel
 
@@ -166,7 +166,7 @@ and run-local database paths.
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T002–T004
-**Status:** READY
+**Status:** DONE
 
 Match immutable semantic intent, parameter constraints, expiry, cardinality, and
 optional compensation.
@@ -193,6 +193,7 @@ optional compensation.
 **Wave:** 3 — Execution core
 **Estimate:** 0.5 day
 **Depends on:** T003, T006
+**Status:** READY
 
 Support explicit triggers, commit-relative placement, delivery/response effects,
 visibility schedules, and required-fault evidence.
@@ -210,6 +211,7 @@ visibility schedules, and required-fault evidence.
 **Wave:** 3 — Execution core
 **Estimate:** 0.5 day
 **Depends on:** T006–T008
+**Status:** BLOCKED on T008
 
 Connect validation, authority, preparation, fault scheduling, service dispatch,
 and structured results through one boundary.
@@ -266,6 +268,7 @@ Codex alone generates, semantically reviews, and commits the canonical golden
 artifact after integration.
 **Estimate:** 0.5 day
 **Depends on:** T004, T006–T007
+**Status:** READY
 
 Add verdict precedence and checks for fault fired, authority, identity, retry
 ordering, effect count, verification, and final claims.
@@ -284,6 +287,7 @@ ordering, effect count, verification, and final claims.
 **Wave:** 3 — Execution core
 **Estimate:** 0.5 day
 **Depends on:** T002, T006, T012
+**Status:** BLOCKED on T012
 
 Write the minimal artifact schema, normalized digests, size limits, and
 `validate-artifact`.

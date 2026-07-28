@@ -53,11 +53,13 @@ inspect, import, depend on, or reuse Stinger code, data, artifacts, or results.
 
 **Kernel-foundation stage.** This repository contains the architecture and
 product plans, a locked Python package, strict version 0.1 base contracts,
-digest-pinned generated schemas, a deterministic logical clock/scheduler and
-run-local identifiers, the canonical guarded operation state machine,
-contract/kernel tests, and an implementation-status CLI. It does not contain
-an executable lab runtime, service simulator, validated scenario, evaluation
-result, release, or working subject integration.
+digest-pinned generated schemas, a deterministic logical clock with generic
+event ordering and run-local identifiers, the canonical guarded operation
+state machine, run-local SQLite event and operation ledgers, pure deterministic
+authority checks with action-specific confirmation and fail-closed evidence,
+contract/kernel tests, and an implementation-status CLI. It does not contain a
+tool gateway, executable lab runtime, service simulator, validated scenario,
+evaluation result, release, or working subject integration.
 
 The only implemented command reports that status:
 

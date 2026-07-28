@@ -2,19 +2,20 @@
 
 ## Current phase
 
-**Wave 2 is active. T005 and T006 are integrated through
-`71392c65d980c12e2d80c12ff19205af211a7b20`; T007 is the sole next
-implementation task after exact-SHA approval of this authority-semantics
-freeze. The version 0.1 base contracts remain frozen; no service simulator or
-scenario is implemented.**
+**Wave 2 is complete at kernel-gate SHA
+`1f200223f748e44f37eb4f17d3368619fb2d0e68`. T001–T007 are integrated and
+Wave 3 is active: T008 fault scheduling and T012 mechanical oracles are the two
+parallel READY tasks. The version 0.1 base contracts remain frozen; no tool
+gateway, service simulator, or scenario is implemented.**
 
 - Integration owner: Codex
 - Independent implementation and adversarial-review lane: Claude Code
 - Planning baseline before this plan: `3c21b55135e9d3b8061e6c423bd4ee2126461eb4`
-- Next implementation task: T007 authority checks after exact-SHA approval of
-  this freeze
-- Completed synchronization point: T005/T006 integration gate at `71392c6`
-- Next synchronization point: combined T003–T007 kernel gate
+- Next implementation tasks: T008 deterministic fault scheduling (Codex) and
+  T012 shared mechanical oracles (Claude Code)
+- Completed synchronization point: combined T003–T007 kernel gate at
+  `1f200223f748e44f37eb4f17d3368619fb2d0e68`
+- Next synchronization point: T008–T013 execution-core gate
 - First human hold: T016 after the validated SEL-001 slice
 
 This document controls active sequencing, ownership, synchronization, and
@@ -197,19 +198,24 @@ specific evidence. Any new head SHA invalidates the prior approval and requires
 at least a delta review. A handoff with a dirty worktree, an unlisted contract
 change, or a failing required check is not merge-ready.
 
-## Wave 1 completion record and next launch
+## Wave 2 completion record and next launch
 
-1. T001 bootstrap was implemented, independently reviewed, and integrated.
-2. T002A contracts were implemented, corrected after adversarial review,
-   independently re-reviewed, and integrated.
-3. Claude Code implemented T002B negative fixtures and contract tests from the
-   corrected T002A integration SHA; Codex and an independent review both
-   approved the corrective head.
-4. Codex integrated T002B, recorded the generated schema digests in
-   `schemas/0.1/SHA256SUMS`, and passed the contract gate with an exact-SHA
-   Claude Code review.
-5. Codex starts T003 from the stable Wave 1 gate. Claude Code reviews T003;
-   T004 remains serial until that review is integrated.
+1. T003 added the logical clock, deterministic ordering, and run-local IDs;
+   T004 then froze the guarded canonical operation state machine.
+2. T005 added independent Hypothesis state-machine invariants while T006 added
+   transactional run-local SQLite event and operation ledgers.
+3. Authority expiry, cardinality, confirmation, compensation, and evidence
+   semantics were frozen and independently approved before T007 implementation.
+4. Claude Code implemented T007. Codex Ultra rejected the first candidate for
+   an unvalidated direct-`FrozenMap` evidence path; the corrected exact SHA was
+   independently rerun and approved before integration.
+5. The complete T003–T007 kernel gate passed at
+   `1f200223f748e44f37eb4f17d3368619fb2d0e68`, including two hash seeds,
+   strict typing and formatting, 1,178 tests, schema/checksum drift checks, and
+   the status CLI.
+6. Wave 3 starts only T008 in the Codex lane and T012 in the Claude Code lane.
+   T009, T013, and all downstream tasks remain blocked on their exact listed
+   dependencies.
 
 The exact first-slice acceptance gate is the six-part Milestone 2 gate in
 [ROADMAP.md](docs/ROADMAP.md#milestone-2--first-vertical-slice).

@@ -59,6 +59,9 @@ clock, state machine, and ledger. Claude Code owns contract negatives,
 traceability, property tests, and authority checks after their dependencies
 land.
 
+**Status:** complete at kernel-gate SHA
+`1f200223f748e44f37eb4f17d3368619fb2d0e68`
+
 **Deliverables**
 
 - `pyproject.toml`, locked dependencies, package skeleton, and CLI shell;
@@ -93,6 +96,9 @@ bypassed.
 replay integration, and final acceptance. Claude Code owns the oracle/artifact
 lane, subject protocol, unsafe fixtures, and the independent replay and
 containment audit.
+
+**Status:** active; T008 and T012 are READY, while T009 and T013 remain blocked
+on those exact dependencies
 
 **Deliverables**
 

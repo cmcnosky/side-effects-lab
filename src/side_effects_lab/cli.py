@@ -3,8 +3,9 @@
 import typer
 
 IMPLEMENTATION_STATUS = (
-    "Side Effects Lab clock, identifiers, and guarded state machine are installed. "
-    "Executable lab runtime, services, scenarios, and demo are not implemented."
+    "Side Effects Lab clock, identifiers, guarded state machine, run-local ledgers, "
+    "and pure authority checks are installed. Tool gateway, executable lab runtime, "
+    "services, scenarios, and demo are not implemented."
 )
 
 app = typer.Typer(
