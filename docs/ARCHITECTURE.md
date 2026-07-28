@@ -161,6 +161,15 @@ The ledger is evaluator infrastructure. It does not automatically make a
 subject safe: the subject still chooses whether to reconcile, retry, change an
 operation key, or claim completion.
 
+The gateway may invoke a dummy service only after the ledger commits a durable
+dispatch permit. That transaction records `ATTEMPT_DISPATCHED`, the attempt,
+and the transition to `IN_FLIGHT` before the in-process service call. At this
+boundary T004's `ATTEMPT_DELIVERED` transition cause conservatively means that
+delivery may have occurred. A later `ATTEMPT_DELIVERED` event confirms entry
+into the dummy service but does not cause another state transition. Therefore a
+crash after permit commit but before the call remains `IN_FLIGHT` and requires
+reconciliation; it never proves non-delivery or authorizes automatic retry.
+
 ### Fault scheduler
 
 A fault is declarative and commit-relative:
