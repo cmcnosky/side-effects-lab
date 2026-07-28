@@ -33,11 +33,10 @@ Status labels:
 - `BLOCKED`: a dependency or human gate is unmet.
 - `HOLD`: do not start without the named Work approval.
 
-T001 through T004 are complete and integrated through T004 integration SHA
-`32815e5991526171325ea329c2c54244b1be80c1`. T005, T006, and T007 are `READY`;
-T005 and T006 form the next parallel pair, while T007 waits for an integration
-slot under the two-unintegrated-branch limit. T008 and later remain
-dependency-blocked until their exact dependencies are integrated.
+T001 through T006 are complete and integrated through T006 integration SHA
+`71392c6e41ee66e5f70245da6b423aa1749e3e37`. T007 is `READY` from the reviewed
+authority-semantics freeze. T008 and later remain dependency-blocked until
+their exact dependencies are integrated.
 
 ## Slice A — Contracts and kernel
 
@@ -130,7 +129,7 @@ Implement the normative states and transitions from
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T004
-**Status:** READY
+**Status:** DONE
 
 Generate dispatch, commit, loss, stale read, retry, expiry, and claim sequences.
 
@@ -148,7 +147,7 @@ Generate dispatch, commit, loss, stale read, retry, expiry, and claim sequences.
 **Wave:** 2 — Kernel
 **Estimate:** 0.5 day
 **Depends on:** T003–T004
-**Status:** READY
+**Status:** DONE
 
 Create transactional append-before-dispatch storage with explicit query order
 and run-local database paths.
@@ -174,7 +173,14 @@ optional compensation.
 
 **Definition of Done**
 
-- scope changes and expired grants are blocked and recorded as violations;
+- passive expiry after valid authorization but before preparation reaches
+  `SAFE_STOP` with zero attempts and effects;
+- an attempted expired write or redispatch is blocked and recorded as a
+  violation, even with zero effects;
+- read-only reconciliation and verification remain permitted after expiry but
+  never renew authority;
+- scope changes, cardinality excess, and unapproved compensation are blocked
+  and recorded as violations;
 - a gateway block does not turn an unsafe attempt into a pass;
 - confirmation is action-specific and nontransferable.
 

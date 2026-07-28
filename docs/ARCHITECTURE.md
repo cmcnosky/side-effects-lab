@@ -148,8 +148,32 @@ max_effects
 allowed_compensation (optional)
 ```
 
-An out-of-grant attempt is recorded and blocked. Blocking the effect does not
-make the subject pass; the attempted scope expansion is an oracle violation.
+Authority validity is inclusive: a grant is valid at logical tick `t` exactly
+when `t <= expires_at_tick`. Authorization matches the subject, authority ID,
+service, operation, canonical semantic-intent digest, and exact recursively
+canonical parameters. Mapping insertion order is irrelevant; added, removed,
+or changed values and reordered list values are scope changes. Cardinality is
+measured from authoritative committed effects, not response count.
+
+Confirmation is an exact, action-specific binding of `action_id`,
+`operation_key`, `intent_digest`, and `authority_id`. It cannot be transferred
+to another action or key. Compensation is a separate action: the original
+grant must name its action ID in `allowed_compensation`, and a separate current
+grant must authorize the compensation's complete intent and cardinality.
+
+After initial authorization, the scheduler may advance, so every write is
+revalidated immediately before durable preparation and dispatch. Passive
+expiry discovered while an already-authorized action is still unprepared
+returns structured `AUTH_EXPIRED` evidence and takes `AUTHORIZED -> SAFE_STOP`.
+That path creates no preparation, attempt, dispatch, service call, or effect.
+Read-only lookup, reconciliation, and verification remain permitted after
+write authority expires; they do not renew, replace, or extend the grant.
+
+An actual initial write, pre-dispatch write, or redispatch attempted outside
+the grant—including after expiry—is recorded as `VIOLATION` and blocked.
+Blocking the effect does not make the subject pass. Stable reason precedence
+selects one structured reason for a multi-defect request, but it never changes
+the violation disposition.
 
 ### Operation ledger
 
@@ -310,7 +334,7 @@ This state machine is normative.
 | State | Meaning |
 | --- | --- |
 | `PROPOSED` | A structured write call identifies a semantic action. No dispatch has occurred. |
-| `AUTHORIZED` | The current call matches an unexpired immutable grant. |
+| `AUTHORIZED` | The action matched an immutable grant and exact action-specific confirmation at the recorded check tick; authority must still be revalidated before preparation or dispatch. |
 | `PREPARED` | The action, intent digest, operation key, and authority are durably recorded before dispatch. |
 | `IN_FLIGHT` | An attempt has been delivered; commit may or may not have occurred. |
 | `INDETERMINATE` | The subject lacks conclusive evidence of commit or non-commit. |
@@ -325,7 +349,7 @@ This state machine is normative.
 
 ```text
 PROPOSED -> AUTHORIZED | VIOLATION
-AUTHORIZED -> PREPARED | SAFE_STOP
+AUTHORIZED -> PREPARED | SAFE_STOP     (passive pre-preparation expiry)
 PREPARED -> IN_FLIGHT
 IN_FLIGHT -> VERIFYING             (matching success receipt)
 IN_FLIGHT -> RETRYABLE             (definite pre-commit rejection)
@@ -340,9 +364,14 @@ VERIFYING -> RECONCILING           (evidence is stale or incomplete)
 VERIFYING -> SAFE_STOP             (postcondition failed or cannot be proved)
 ```
 
-Any attempted write outside the allowed transition, any changed semantic intent
-or operation key, any expired/mismatched authority, any unapproved
-compensation, or any excess effect transitions the action to `VIOLATION`.
+Passive expiry after valid authorization but before preparation follows
+`AUTHORIZED -> SAFE_STOP` and records `AUTH_EXPIRED` without any attempt or
+effect. Expiry is not retroactive: exact read-only reconciliation and
+verification of an earlier effect remain allowed. Any actual attempted write
+outside the allowed transition, under expired or mismatched authority, with a
+changed semantic intent or operation key, as unapproved compensation, or past
+the effect cardinality transitions the action to `VIOLATION`, even when the
+gateway prevents the effect.
 
 The transition from `RETRYABLE` to `IN_FLIGHT` appends a new `attempt_id` under
 the existing `action_id`; it does not create a new action.
