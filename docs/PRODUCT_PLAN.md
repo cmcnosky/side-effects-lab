@@ -105,12 +105,13 @@ general evaluation platform.
 ## Adjacent work and differentiation
 
 This was a targeted primary-source scan on 2026-07-27, not an exhaustive market
-or literature review. It must be refreshed before public release.
+or literature review. Its links were rechecked against their primary sources on
+2026-08-11; the analysis must still be substantively refreshed before a release.
 
 | Project | What its primary source says it covers | Relationship to Side Effects Lab |
 | --- | --- | --- |
 | [ToolSandbox](https://github.com/apple/ToolSandbox) | Stateful tool-use evaluation with roles, world-state snapshots, and milestone-based evaluation | Strong precedent for a simulated world and state-based scoring. Side Effects Lab narrows to commit ambiguity, exact effect cardinality, freshness, and recovery invariants. |
-| [tau3-bench](https://github.com/sierra-research/tau2-bench) | User-agent-tool simulations with policies and domain tools | Strong precedent for policy-constrained stateful interactions. Side Effects Lab has no user simulator or model leaderboard and focuses on tool outcome ambiguity. |
+| [tau3-bench](https://github.com/sierra-research/tau2-bench) | Policy-constrained user-agent-tool simulations across stateful domains, now including knowledge and voice modalities | Strong precedent for policy-constrained stateful interactions. Side Effects Lab has no user simulator or model leaderboard and focuses on tool outcome ambiguity. |
 | [Inspect](https://inspect.aisi.org.uk/) | A broad open-source evaluation framework with tools, scorers, agents, bridges, and sandboxes | Potential future integration surface, not a dependency. Rebuilding Inspect would be scope failure. |
 | [AgentDojo](https://github.com/ethz-spylab/agentdojo) | Dynamic evaluation of prompt-injection attacks and defenses for tool-using agents | Neighboring safety problem, deliberately out of scope. Side Effects Lab does not claim prompt-injection coverage. |
 | [agent-chaos](https://github.com/deepankarm/agent-chaos) | LLM/tool timeouts, errors, mutations, fuzzing, and assertion integrations | Direct overlap at generic faults. Side Effects Lab must differentiate through modeled commits, operation identity, authority, and authoritative effect oracles—not through another list of error injectors. |
@@ -126,12 +127,6 @@ or literature review. It must be refreshed before public release.
 
 It should not be presented as the first agent fault injector, a comprehensive
 reliability solution, or a replacement for any project above.
-
-The portfolio-level boundary supplied by the owner is also explicit: Stinger is
-positioned around integrity and specification-gaming; Side Effects Lab is
-positioned around stateful tool reliability and recovery. That distinction is
-descriptive only. No Stinger implementation, data, artifact, assumption, or
-result is an input to this clean-room project.
 
 ### Why build rather than contribute upstream?
 
@@ -257,6 +252,10 @@ project duplicates an existing tool or cannot contain external subjects safely.
   explicit owner approval.
 - **Public publication:** only the owner may create a remote, push, publish a
   package, make a release, or announce results.
+- **Recorded public snapshot:** on August 11, 2026, the owner authorized a
+  public remote and curated `main`-only pushes for work-in-progress inspection.
+  That narrow approval grants no license and authorizes no non-`main` ref, tag,
+  release, package, result announcement, or release claim.
 - **Real integrations:** prohibited. Local fake service adapters are the product,
   not a stepping stone to production credentials.
 - **Human approval:** license activation, public release, paid services, and any

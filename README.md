@@ -44,14 +44,10 @@ trace. It does not ask another model to judge whether the answer sounds safe.
 The MVP is intentionally not a dashboard, hosted service, leaderboard, model
 ranking exercise, or general chaos-engineering framework.
 
-Within the portfolio positioning supplied for this project, Stinger covers
-integrity and specification-gaming while Side Effects Lab covers stateful tool
-reliability and recovery. They are separate projects: this repository does not
-inspect, import, depend on, or reuse Stinger code, data, artifacts, or results.
-
 ## Status
 
-**Kernel-foundation stage.** This repository contains the architecture and
+**Public inspection snapshot; kernel-foundation stage.** This curated `main`
+branch is a work in progress, not a release. It contains the architecture and
 product plans, a locked Python package, strict version 0.1 base contracts,
 digest-pinned generated schemas, a deterministic logical clock with generic
 event ordering and run-local identifiers, the canonical guarded operation
@@ -75,6 +71,19 @@ uv run --locked sel demo
 
 The `demo` command does not exist yet.
 
+The [foundation CI workflow](.github/workflows/ci.yml) runs only the checks
+supported by this snapshot: lockfile drift, Ruff lint and formatting, strict
+mypy, pytest, and the status CLI. A passing foundation workflow is not evidence
+that the planned lab, demo, or scenarios exist.
+
+## Authorship and accountability
+
+Chris McNosky is the project owner and author. He directs product scope,
+architecture decisions, integration, and publication, and is accountable for
+the repository's public claims. Implementation and adversarial review use the
+documented Codex and Claude Code lanes; the commit history and
+[execution plan](PLAN.md) record how that work is divided and integrated.
+
 ## Honest non-claims
 
 Side Effects Lab does not currently:
@@ -86,9 +95,9 @@ Side Effects Lab does not currently:
 - support real GitHub, email, deployment, ticketing, payment, or MCP services;
 - provide exactly-once delivery, which generally cannot be inferred from a lost
   response;
-- have an open-source license in force. Apache-2.0 is the selected intended
-  license, but the repository is not licensed until the owner approves and adds
-  a `LICENSE` file.
+- be open source. Public visibility permits inspection; it does not grant a
+  general right to use, copy, modify, or redistribute the work. See
+  [Rights and permissions](RIGHTS.md).
 
 ## Plan map
 

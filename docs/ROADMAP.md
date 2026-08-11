@@ -97,8 +97,8 @@ replay integration, and final acceptance. Claude Code owns the oracle/artifact
 lane, subject protocol, unsafe fixtures, and the independent replay and
 containment audit.
 
-**Status:** active; T008 and T012 are READY, while T009 and T013 remain blocked
-on those exact dependencies
+**Status:** next planned; T008 and T012 are READY, while T009 and T013 remain
+blocked on those exact dependencies
 
 **Deliverables**
 
@@ -310,8 +310,13 @@ within one week; neither builder can compress those waits.
 
 **Owner:** Work only
 
-Before any remote creation, push, package publication, tag, release, public
-post, or result announcement:
+**Recorded owner decision — August 11, 2026:** the owner authorized a public
+remote and curated `main`-only pushes for a clearly labeled work-in-progress
+inspection snapshot. The snapshot remains unlicensed, carries no release or
+result claim, excludes every non-`main` ref, and does not satisfy this hold.
+
+Before any tag, release, package publication, public post, result announcement,
+release-bearing push, or expansion beyond that recorded snapshot:
 
 1. refresh links and adjacent-work claims;
 2. inspect Git history for secrets and unrelated content;

@@ -34,7 +34,7 @@ Status labels:
 - `HOLD`: do not start without the named Work approval.
 
 T001 through T007 are complete and integrated through Wave 2 kernel-gate SHA
-`1f200223f748e44f37eb4f17d3368619fb2d0e68`. Wave 3 is active: T008 and T012
+`1f200223f748e44f37eb4f17d3368619fb2d0e68`. Wave 3 is next: T008 and T012
 are READY in separate lanes. T009, T013, and all later tasks remain blocked on
 their exact listed dependencies.
 
@@ -692,6 +692,11 @@ artifacts, adapter conformance, and replay from the threat-model matrix.
 Run locked lint, types, tests, adapter conformance, and demo verification on
 Python 3.12/3.13.
 
+An owner-authorized foundation workflow may run earlier against the stable
+kernel snapshot. That narrower workflow does not implement or satisfy T041,
+which still requires the later runtime, adapter, containment, replay, and demo
+checks on both supported Python versions.
+
 ### T042 — Complete clean-clone and claims audit
 
 **Primary owner:** Codex (integration)
@@ -708,6 +713,12 @@ Test from a fresh local clone, record exact runtime, verify docs/links, and
 update README status only to supported claims.
 
 ## Hold C — Community and publication
+
+**Recorded owner decision — August 11, 2026:** a public remote and curated
+`main`-only pushes are approved for work-in-progress technical inspection under
+an explicit no-license, no-release boundary. This decision does not advance any
+task below, authorize a non-`main` ref, or satisfy a portfolio, community, or
+release gate.
 
 ### T043 — Approve and add Apache-2.0 licensing
 
@@ -762,9 +773,10 @@ prepare wording. Do not publish.
 **Status:** HOLD
 **Depends on:** T046
 
-Choose `APPROVE`, `REVISE`, or `DO NOT PUBLISH`. Only `APPROVE` authorizes remote
-creation, push, tag, release, or announcement, and those actions should be
-separately confirmed in the publication task.
+Choose `APPROVE`, `REVISE`, or `DO NOT PUBLISH` for the release candidate. Only
+`APPROVE` authorizes a tag, release, package publication, result announcement,
+release claim, or expansion beyond the separately recorded public-inspection
+snapshot. Those actions must be separately confirmed in the publication task.
 
 ## Recommended first implementation slice
 

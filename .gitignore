@@ -1,4 +1,10 @@
 .DS_Store
+/.coordination/
+/.worktrees/
+.env
+.env.*
+*.env
+*.env.*
 .venv/
 __pycache__/
 *.py[cod]

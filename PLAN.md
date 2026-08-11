@@ -4,7 +4,7 @@
 
 **Wave 2 is complete at kernel-gate SHA
 `1f200223f748e44f37eb4f17d3368619fb2d0e68`. T001–T007 are integrated and
-Wave 3 is active: T008 fault scheduling and T012 mechanical oracles are the two
+Wave 3 is next: T008 fault scheduling and T012 mechanical oracles are the two
 parallel READY tasks. The version 0.1 base contracts remain frozen; no tool
 gateway, service simulator, or scenario is implemented.**
 
@@ -17,6 +17,11 @@ gateway, service simulator, or scenario is implemented.**
   `1f200223f748e44f37eb4f17d3368619fb2d0e68`
 - Next synchronization point: T008–T013 execution-core gate
 - First human hold: T016 after the validated SEL-001 slice
+- Owner decision recorded August 11, 2026: the curated `main` branch may be
+  publicly visible and receive main-only hardening pushes as a work-in-progress
+  inspection snapshot. This does not authorize an open-source license, any
+  non-`main` ref, tag, release, package, result announcement, or release claim;
+  T043–T047 remain gated for those later actions.
 
 This document controls active sequencing, ownership, synchronization, and
 handoffs. It does not redefine product scope, architecture, scenarios, safety,
@@ -143,7 +148,8 @@ Agreement between Codex and Claude Code never substitutes for Work approval.
 | T037 | Approve the trusted local subprocess boundary. |
 | T043 | Approve and add the selected license. |
 | T045 | Coordinate two genuinely external clean-clone reproductions. |
-| T047 | Approve any remote creation, push, tag, release, publication, or announcement. |
+| Public inspection snapshot | As of August 11, 2026, approve a public remote and curated `main`-only WIP pushes under the explicit no-license and no-release boundary. |
+| T047 | Approve any tag, release, package publication, result announcement, release claim, or expansion beyond the recorded public-snapshot scope. |
 
 Paid services, real integrations, real credentials or recipients, public
 publication, and any weakening of the no-real-side-effects boundary remain
@@ -160,7 +166,7 @@ human-only decisions. They are not implied by this plan.
 | MVP | All 12 required faults fire, unsafe mutants fail for the intended reason, safe references reach allowed terminal states, replay matches, and the suite stays under two minutes. |
 | Adapter | Subprocess support is explicit opt-in, scrubs the environment, enforces budgets, rejects malformed protocol, and is never described as a sandbox. |
 | Portfolio | Demo completes in under 30 seconds after setup; CI runs lint, types, tests, replay, containment, and demo verification; a clean clone reproduces the exact integrated SHA. |
-| Publication | License, external reproductions, refreshed sources, history/secret review, exact release CI, wording, and explicit Work approval are complete. |
+| Release publication | License, external reproductions, refreshed sources, history/secret review, exact release CI, wording, and explicit Work approval are complete. Public WIP inspection does not satisfy this gate. |
 
 Gate-critical changes to the state machine, authority engine, scheduler, gateway,
 oracles, replay, containment, or subprocess boundary require the other builder

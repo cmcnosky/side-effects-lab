@@ -125,7 +125,13 @@ CI demonstration command.
 
 ## Repository presentation
 
-The eventual public repository landing page should lead in this order:
+An owner-authorized public `main` may be visible as a curated work-in-progress
+inspection snapshot before release readiness. That snapshot must state its
+implemented status, omit unintegrated or rejected branches, identify the owner
+and development workflow accurately, and make the no-license boundary explicit.
+Public visibility does not satisfy a portfolio, community, or release gate.
+
+The eventual release-ready repository landing page should lead in this order:
 
 1. one-sentence pitch;
 2. 15–25 second terminal recording or static screenshot;
@@ -151,7 +157,18 @@ The portfolio should emphasize the engineering:
 
 ### Pull-request gate
 
-Once implemented:
+The public kernel-foundation snapshot runs the deterministic subset it supports:
+
+```console
+uv lock --check
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy src
+uv run --locked pytest
+uv run --locked sel
+```
+
+The complete future gate, once the runtime and demo are implemented, is:
 
 ```console
 uv lock --check
@@ -210,7 +227,8 @@ ambient host paths.
 
 ### Stages
 
-1. `0.1.0-dev`: local development only; no publication claim.
+1. `0.1.0-dev`: work-in-progress source; it may be owner-authorized for public
+   inspection but carries no release, validation, or open-source claim.
 2. `0.1.0-rc1`: all portfolio/community gates pass; owner reviews.
 3. `0.1.0`: first public source release after explicit approval.
 4. Package-index publication: optional later decision; a GitHub source release

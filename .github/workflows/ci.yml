@@ -1,0 +1,54 @@
+name: Foundation CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foundation-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stable-main:
+    name: Python 3.12 stable foundation gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONHASHSEED: "0"
+      UV_NO_EDITABLE: "1"
+      UV_PYTHON: "3.12"
+
+    steps:
+      - name: Check out the curated source tree
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install pinned uv and Python
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.11.32"
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Verify the lockfile
+        run: uv lock --check
+
+      - name: Install the locked development environment
+        run: uv sync --locked --all-groups --no-editable
+
+      - name: Run the stable foundation gate offline
+        env:
+          UV_OFFLINE: "1"
+        run: |
+          uv run --locked --no-sync ruff check .
+          uv run --locked --no-sync ruff format --check .
+          uv run --locked --no-sync mypy src
+          uv run --locked --no-sync pytest
+          uv run --locked --no-sync sel
