@@ -76,6 +76,32 @@ supported by this snapshot: lockfile drift, Ruff lint and formatting, strict
 mypy, pytest, and the status CLI. A passing foundation workflow is not evidence
 that the planned lab, demo, or scenarios exist.
 
+## Evaluate the current foundation in five minutes
+
+With Python 3.12 and `uv` installed, run the status command and the focused
+kernel checks from the repository root:
+
+```console
+uv run --locked sel
+uv run --locked pytest -q \
+  tests/test_cli.py \
+  tests/test_authority_engine.py \
+  tests/test_state_machine.py \
+  tests/test_state_machine_properties.py
+```
+
+Then inspect the implementation beside its tests:
+
+- [guarded operation state machine](src/side_effects_lab/state_machine.py) and
+  [its example-based tests](tests/test_state_machine.py);
+- [authority engine](src/side_effects_lab/authority.py) and
+  [its confirmation and evidence tests](tests/test_authority_engine.py);
+- [event and operation ledger](src/side_effects_lab/ledger.py) and
+  [its persistence tests](tests/test_ledger.py).
+
+This path evaluates the implemented kernel foundation. The executable demo has
+its own publication gate in [the demo and release plan](docs/DEMO_AND_RELEASE.md).
+
 ## Authorship and accountability
 
 Chris McNosky is the project owner and author. He directs product scope,
