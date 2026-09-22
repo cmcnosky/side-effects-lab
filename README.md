@@ -1,9 +1,15 @@
 # Side Effects Lab
 
-Side Effects Lab is a planned, vendor-neutral reliability lab for agents that
-use tools with real-world-shaped side effects.
+Side Effects Lab contains the Python kernel foundation for a planned,
+vendor-neutral reliability lab for agents that use tools with real-world-shaped
+side effects. The implemented foundation includes strict versioned contracts,
+logical time and deterministic identifiers, a guarded operation state machine,
+run-local SQLite event and operation ledgers, and action-specific authority
+checks. The tool gateway, service simulator, validated scenarios, subject
+integration, and executable demo remain planned and are not included in this
+snapshot.
 
-The lab will answer a narrow question:
+The completed lab is intended to answer a narrow question:
 
 > When a tool call might have succeeded but its response is missing, delayed,
 > duplicated, stale, or contradictory, does the agent reconcile safely—or
@@ -104,11 +110,10 @@ its own publication gate in [the demo and release plan](docs/DEMO_AND_RELEASE.md
 
 ## Authorship and accountability
 
-Chris McNosky is the project owner and author. He directs product scope,
-architecture decisions, integration, and publication, and is accountable for
-the repository's public claims. Implementation and adversarial review use the
-documented Codex and Claude Code lanes; the commit history and
-[execution plan](PLAN.md) record how that work is divided and integrated.
+Chris McNosky is the project owner and is accountable for product scope,
+architecture decisions, integration, publication, and the repository's public
+claims. The commit history and [execution plan](PLAN.md) preserve the
+implementation record.
 
 ## Honest non-claims
 
